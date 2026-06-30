@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { Heart, Mail, Phone, MapPin } from "lucide-react";
@@ -7,27 +9,26 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   const services = [
-    { name: "Companion Care", href: "/services#companion-care" },
-    { name: "Personal Assistance", href: "/services#personal-assistance" },
-    { name: "Meal Preparation", href: "/services#meal-preparation" },
-    { name: "Medication Reminders", href: "/services#medication-reminders" },
-    { name: "Transportation", href: "/services#transportation" },
-    { name: "Hospital Transition", href: "/services#hospital-transition" },
-    { name: "Dementia Support", href: "/services#alzheimers-companion-care" },
+    { name: "Companion Care", href: "#services" },
+    { name: "Personal Assistance", href: "#services" },
+    { name: "Meal Preparation", href: "#services" },
+    { name: "Medication Reminders", href: "#services" },
+    { name: "Transportation", href: "#services" },
+    { name: "Hospital Transition", href: "#services" },
+    { name: "Dementia Support", href: "#services" },
   ];
 
   const company = [
-    { name: "About Us", href: "/about" },
-    { name: "Our Services", href: "/services" },
-    { name: "Become a Caregiver", href: "/caregivers" },
-    { name: "Contact Support", href: "/contact" },
+    { name: "Home", href: "#hero" },
+    { name: "About Us", href: "#about" },
+    { name: "Our Services", href: "#services" },
+    { name: "FAQs", href: "#faq" },
   ];
 
   const resources = [
-    { name: "Care Guides", href: "#" },
-    { name: "Family Support FAQ", href: "/#faq" },
-    { name: "Coverage Network", href: "/#coverage" },
-    { name: "Emergency Contacts", href: "/contact#emergency" },
+    { name: "Why Choose Us", href: "#why-us" },
+    { name: "How It Works", href: "#how-it-works" },
+    { name: "Coverage Network", href: "#coverage" },
   ];
 
   const socialLinks = [
@@ -79,6 +80,20 @@ export default function Footer() {
     },
   ];
 
+  const handleFooterLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      const targetId = href.replace("#", "");
+      const element = document.getElementById(targetId);
+      if (element) {
+        window.scrollTo({
+          top: element.offsetTop - 90,
+          behavior: "smooth",
+        });
+      }
+    }
+  };
+
   return (
     <footer className="bg-brand-navy text-slate-300 border-t border-slate-800">
       {/* Main Footer Grid */}
@@ -87,11 +102,11 @@ export default function Footer() {
           
           {/* Column 1: Brand details */}
           <div className="lg:col-span-2 flex flex-col gap-6">
-            <Link href="/" className="flex items-center gap-2.5 group">
+            <a href="#hero" onClick={(e) => handleFooterLinkClick(e, "#hero")} className="flex items-center gap-2.5 group">
               <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-sm">
                 <Heart className="w-5.5 h-5.5 text-white fill-white/10" />
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col text-left">
                 <span className="text-lg font-bold tracking-tight text-white">
                   Caregivers Nearby
                 </span>
@@ -99,64 +114,64 @@ export default function Footer() {
                   Trusted Network
                 </span>
               </div>
-            </Link>
-            <p className="text-sm leading-relaxed text-slate-400 max-w-sm">
+            </a>
+            <p className="text-sm leading-relaxed text-slate-400 text-left max-w-sm">
               Providing premium, compassionate in-home care services designed to help seniors age safely and comfortably in their own homes, while giving families absolute peace of mind.
             </p>
             {/* Contact details */}
-            <div className="flex flex-col gap-3.5 text-sm">
+            <div className="flex flex-col gap-3.5 text-sm text-left">
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-brand-teal shrink-0 mt-0.5" />
                 <span className="text-slate-400">{SITE_INFO.address}</span>
               </div>
-              <a href={`tel:${SITE_INFO.phone}`} className="flex items-center gap-3 hover:text-white transition-colors group">
+              <a href="tel:+14047542651" className="flex items-center gap-3 hover:text-white transition-colors group">
                 <Phone className="w-5 h-5 text-brand-teal shrink-0 group-hover:scale-105 transition-transform" />
-                <span>{SITE_INFO.phone}</span>
+                <span>+1 404-754-2651</span>
               </a>
-              <a href={`mailto:${SITE_INFO.email}`} className="flex items-center gap-3 hover:text-white transition-colors group">
+              <a href="mailto:info@caregiversnearby.com" className="flex items-center gap-3 hover:text-white transition-colors group">
                 <Mail className="w-5 h-5 text-brand-teal shrink-0 group-hover:scale-105 transition-transform" />
-                <span>{SITE_INFO.email}</span>
+                <span>info@caregiversnearby.com</span>
               </a>
             </div>
           </div>
 
           {/* Column 2: Services */}
-          <div>
+          <div className="text-left">
             <h3 className="text-white font-bold text-sm tracking-wider uppercase mb-6">Services</h3>
             <ul className="space-y-3.5 text-sm">
-              {services.map((item) => (
-                <li key={item.name}>
-                  <Link href={item.href} className="hover:text-white transition-colors text-slate-400">
+              {services.map((item, idx) => (
+                <li key={idx}>
+                  <a href={item.href} onClick={(e) => handleFooterLinkClick(e, item.href)} className="hover:text-white transition-colors text-slate-400">
                     {item.name}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
 
           {/* Column 3: Company */}
-          <div>
+          <div className="text-left">
             <h3 className="text-white font-bold text-sm tracking-wider uppercase mb-6">Company</h3>
             <ul className="space-y-3.5 text-sm">
-              {company.map((item) => (
-                <li key={item.name}>
-                  <Link href={item.href} className="hover:text-white transition-colors text-slate-400">
+              {company.map((item, idx) => (
+                <li key={idx}>
+                  <a href={item.href} onClick={(e) => handleFooterLinkClick(e, item.href)} className="hover:text-white transition-colors text-slate-400">
                     {item.name}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
 
           {/* Column 4: Resources */}
-          <div>
+          <div className="text-left">
             <h3 className="text-white font-bold text-sm tracking-wider uppercase mb-6">Resources</h3>
             <ul className="space-y-3.5 text-sm">
-              {resources.map((item) => (
-                <li key={item.name}>
-                  <Link href={item.href} className="hover:text-white transition-colors text-slate-400">
+              {resources.map((item, idx) => (
+                <li key={idx}>
+                  <a href={item.href} onClick={(e) => handleFooterLinkClick(e, item.href)} className="hover:text-white transition-colors text-slate-400">
                     {item.name}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>

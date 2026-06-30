@@ -21,30 +21,30 @@ export default function Accordion({ items }: AccordionProps) {
   };
 
   return (
-    <div className="space-y-4 max-w-3xl mx-auto">
+    <div className="space-y-4 max-w-3xl mx-auto w-full">
       {items.map((item, idx) => {
         const isOpen = activeIndex === idx;
 
         return (
           <div
             key={idx}
-            className={`border rounded-2xl transition-all duration-300 ${
+            className={`border rounded-3xl transition-all duration-500 ease-out ${
               isOpen
-                ? "border-brand-blue/20 bg-brand-sky/30 shadow-md"
-                : "border-slate-100 bg-white hover:border-slate-200 shadow-sm"
+                ? "border-brand-blue/15 bg-brand-sky/20 shadow-md shadow-brand-blue/5"
+                : "border-slate-100 bg-white hover:border-slate-200/80 shadow-premium"
             }`}
           >
             {/* Question Header */}
             <button
               onClick={() => toggleIndex(idx)}
-              className="w-full flex items-center justify-between text-left p-6 font-semibold text-brand-navy focus-visible:ring-2 focus-visible:ring-brand-blue rounded-2xl cursor-pointer"
+              className="w-full flex items-center justify-between text-left p-6 sm:p-7 font-bold text-brand-navy focus-visible:ring-2 focus-visible:ring-brand-blue rounded-3xl cursor-pointer"
               aria-expanded={isOpen}
             >
               <span className="text-base sm:text-lg leading-snug pr-4">{item.question}</span>
               <motion.div
                 animate={{ rotate: isOpen ? 180 : 0 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className={`p-1.5 rounded-lg shrink-0 ${
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className={`p-2 rounded-xl shrink-0 ${
                   isOpen ? "bg-brand-blue/10 text-brand-blue" : "bg-slate-50 text-slate-400"
                 }`}
               >
@@ -59,10 +59,10 @@ export default function Accordion({ items }: AccordionProps) {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                   className="overflow-hidden"
                 >
-                  <div className="px-6 pb-6 text-sm sm:text-base leading-relaxed text-slate-500 border-t border-slate-100/50 pt-4">
+                  <div className="px-7 pb-7 text-sm sm:text-base leading-relaxed text-slate-500 border-t border-slate-100/50 pt-4">
                     {item.answer}
                   </div>
                 </motion.div>
