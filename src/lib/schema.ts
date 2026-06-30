@@ -1,11 +1,16 @@
 import { z } from "zod";
 
 export const contactSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+  firstName: z.string().min(2, { message: "First name must be at least 2 characters." }),
+  lastName: z.string().min(2, { message: "Last name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
   phone: z.string().min(10, { message: "Phone number must be at least 10 digits." }),
-  careType: z.string().min(1, { message: "Please select a care service type." }),
+  serviceNeeded: z.string().min(1, { message: "Please select a service type." }),
   message: z.string().min(10, { message: "Message must be at least 10 characters." }),
+  preferredContact: z.enum(["email", "phone", "text"]),
+  agreeToContact: z.boolean().refine((val) => val === true, {
+    message: "You must agree to the terms to be contacted.",
+  }),
 });
 
 export type ContactFormData = z.infer<typeof contactSchema>;

@@ -2,15 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Heart, Menu, X, PhoneCall } from "lucide-react";
 import Button from "@/components/ui/Button";
-import { SITE_INFO } from "@/lib/data/content";
-import { openCareModal } from "@/components/ui/ActionModal";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,18 +21,20 @@ export default function Navbar() {
         setScrolled(false);
       }
 
-      // Check which section is in view
-      const sections = ["hero", "services", "why-us", "how-it-works", "about", "faq"];
-      const scrollPosition = window.scrollY + 120;
+      // Check active section only on home page
+      if (pathname === "/") {
+        const sections = ["hero", "services", "why-us", "how-it-works", "faq"];
+        const scrollPosition = window.scrollY + 120;
 
-      for (const section of sections) {
-        const el = document.getElementById(section);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section);
-            break;
+        for (const section of sections) {
+          const el = document.getElementById(section);
+          if (el) {
+            const top = el.offsetTop;
+            const height = el.offsetHeight;
+            if (scrollPosition >= top && scrollPosition < top + height) {
+              setActiveSection(section);
+              break;
+            }
           }
         }
       }
@@ -39,27 +42,27 @@ export default function Navbar() {
     
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [pathname]);
 
   const navLinks = [
-    { name: "Home", href: "#hero" },
-    { name: "Services", href: "#services" },
-    { name: "Why Choose Us", href: "#why-us" },
-    { name: "How It Works", href: "#how-it-works" },
-    { name: "About Us", href: "#about" },
-    { name: "FAQs", href: "#faq" },
+    { name: "Home", href: "/", isAnchor: true, anchorId: "hero" },
+    { name: "Services", href: "/#services", isAnchor: true, anchorId: "services" },
+    { name: "Why Choose Us", href: "/#why-us", isAnchor: true, anchorId: "why-us" },
+    { name: "About Us", href: "/about", isAnchor: false },
+    { name: "Contact", href: "/contact", isAnchor: false },
   ];
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, link: typeof navLinks[0]) => {
     setIsOpen(false);
-    const targetId = href.replace("#", "");
-    const element = document.getElementById(targetId);
-    if (element) {
-      window.scrollTo({
-        top: element.offsetTop - 90,
-        behavior: "smooth",
-      });
+    if (link.isAnchor && pathname === "/") {
+      e.preventDefault();
+      const element = document.getElementById(link.anchorId!);
+      if (element) {
+        window.scrollTo({
+          top: element.offsetTop - 90,
+          behavior: "smooth",
+        });
+      }
     }
   };
 
@@ -80,7 +83,7 @@ export default function Navbar() {
           </div>
           <div className="flex items-center gap-4">
             <a
-              href={`tel:+14047542651`}
+              href="tel:+14047542651"
               className="flex items-center gap-1 hover:text-white transition-colors"
             >
               <PhoneCall size={12} />
@@ -92,8 +95,9 @@ export default function Navbar() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <a href="#hero" onClick={(e) => handleNavClick(e as any, "#hero")} className="flex items-center gap-2.5 group rounded-lg p-1 cursor-pointer">
+          
+          {/* Logo SVG */}
+          <Link href="/" className="flex items-center gap-2.5 group rounded-lg p-1 cursor-pointer">
             <div className="w-10 h-10 rounded-xl bg-brand-blue/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-sm">
               <Heart className="w-5.5 h-5.5 text-brand-blue fill-brand-blue/10" />
             </div>
@@ -105,29 +109,31 @@ export default function Navbar() {
                 Trusted Network
               </span>
             </div>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => {
-              const targetId = link.href.replace("#", "");
-              const isActive = activeSection === targetId;
+              const isCurrent = link.isAnchor 
+                ? (pathname === "/" && activeSection === link.anchorId)
+                : (pathname === link.href);
+
               return (
-                <a
+                <Link
                   key={link.name}
                   href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
+                  onClick={(e) => handleLinkClick(e, link)}
                   className={`text-sm font-medium transition-colors relative py-1 px-1 ${
-                    isActive
+                    isCurrent
                       ? "text-brand-blue font-semibold"
                       : "text-slate-600 hover:text-brand-navy"
                   }`}
                 >
                   {link.name}
-                  {isActive && (
+                  {isCurrent && (
                     <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-blue rounded-full"></span>
                   )}
-                </a>
+                </Link>
               );
             })}
           </nav>
@@ -135,14 +141,14 @@ export default function Navbar() {
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-4">
             <Button
-              onClick={() => openCareModal("apply")}
+              href="/contact?subject=caregiver"
               variant="outline"
               size="sm"
             >
               Join as Caregiver
             </Button>
             <Button
-              onClick={() => openCareModal("request")}
+              href="/contact?type=request"
               variant="primary"
               size="sm"
             >
@@ -169,40 +175,38 @@ export default function Navbar() {
         <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-100 shadow-xl px-4 py-6 flex flex-col gap-4 transition-all duration-300 ease-in-out">
           <nav className="flex flex-col gap-4">
             {navLinks.map((link) => {
-              const targetId = link.href.replace("#", "");
-              const isActive = activeSection === targetId;
+              const isCurrent = link.isAnchor 
+                ? (pathname === "/" && activeSection === link.anchorId)
+                : (pathname === link.href);
+
               return (
-                <a
+                <Link
                   key={link.name}
                   href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
+                  onClick={(e) => handleLinkClick(e, link)}
                   className={`text-base font-semibold py-2 px-3 rounded-lg transition-colors text-left ${
-                    isActive
+                    isCurrent
                       ? "bg-brand-sky text-brand-blue"
                       : "text-slate-600 hover:bg-slate-50 hover:text-brand-navy"
                   }`}
                 >
                   {link.name}
-                </a>
+                </Link>
               );
             })}
           </nav>
           <div className="border-t border-slate-100 pt-4 flex flex-col gap-3">
             <Button
-              onClick={() => {
-                setIsOpen(false);
-                openCareModal("apply");
-              }}
+              href="/contact?subject=caregiver"
+              onClick={() => setIsOpen(false)}
               variant="outline"
               fullWidth
             >
               Join as Caregiver
             </Button>
             <Button
-              onClick={() => {
-                setIsOpen(false);
-                openCareModal("request");
-              }}
+              href="/contact?type=request"
+              onClick={() => setIsOpen(false)}
               variant="primary"
               fullWidth
             >
