@@ -50,42 +50,7 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
     // 4. Update Rate Limit Cache
     rateLimitCache.set(clientIp, now);
 
-    // 6. Web3Forms API Integration (Main Email Receiver for Admin)
-    const web3formsAccessKey = "09897199-a6c3-4b13-9e30-d20c6c861b9b";
-    
-    try {
-      const web3Response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: web3formsAccessKey,
-          subject: "New Contact Form Submission - Caregivers Nearby",
-          from_name: "Caregivers Nearby Website",
-          name: `${data.firstName} ${data.lastName}`,
-          email: data.email, // This allows Web3Forms to send an auto-response to the user if enabled
-          phone: data.phone,
-          service_needed: data.serviceNeeded,
-          preferred_contact: data.preferredContact,
-          message: data.message,
-          timestamp: new Date().toLocaleString(),
-          ip_address: clientIp,
-          // Adding logo field as requested, which Web3Forms can use in its email templates
-          logo: "https://www.caregiversnearby.com/logo/logo.svg"
-        }),
-      });
 
-      const web3Result = await web3Response.json();
-      if (!web3Result.success) {
-        console.error("Web3Forms error details:", web3Result);
-        return { success: false, error: web3Result.message || "Failed to submit request via Web3Forms. Please try again." };
-      }
-    } catch (web3Error: any) {
-      console.error("Web3Forms network error:", web3Error);
-      return { success: false, error: "Network error trying to contact Web3Forms. Please try again." };
-    }
 
     // 7. Resend Email Delivery (Visitor Confirmation Email Fallback)
     const apiKey = process.env.RESEND_API_KEY;

@@ -40,7 +40,35 @@ export default function Contact() {
     };
 
     try {
-      // Execute Next.js Server Action
+      // 1. Client-Side Web3Forms Submission (Main Admin Email)
+      // Web3Forms blocks server-side requests to prevent spam, so it MUST run in the browser.
+      const web3Response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "09897199-a6c3-4b13-9e30-d20c6c861b9b",
+          subject: "New Contact Form Submission - Caregivers Nearby",
+          from_name: "Caregivers Nearby Website",
+          name: `${data.firstName} ${data.lastName}`,
+          email: data.email, // This allows Web3Forms to send an auto-response to the user if enabled
+          phone: data.phone,
+          service_needed: data.serviceNeeded,
+          preferred_contact: data.preferredContact,
+          message: data.message,
+          timestamp: new Date().toLocaleString(),
+          logo: "https://www.caregiversnearby.com/logo/logo.svg"
+        }),
+      });
+
+      const web3Result = await web3Response.json();
+      if (!web3Result.success) {
+        throw new Error(web3Result.message || "Failed to submit request via Web3Forms.");
+      }
+
+      // 2. Execute Next.js Server Action (For Validation, Fallback Email, Rate Limiting)
       const result = await submitContactForm(payload, "client-browser");
       if (result.success) {
         setSuccess(true);
