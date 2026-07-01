@@ -8,35 +8,8 @@ import path from "path";
 // Simple in-memory rate limiter (stores timestamp by client identifiers/IPs)
 const rateLimitCache = new Map<string, number>();
 
-async function verifyTurnstileToken(token: string, secretKey: string) {
-  // Always approve standard Cloudflare testing keys without making a network request
-  if (secretKey === "1x00000000000000000000000000000000") {
-    console.log("Turnstile test key detected. Auto-approving submission.");
-    return true;
-  }
 
-  try {
-    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: `secret=${encodeURIComponent(secretKey)}&response=${encodeURIComponent(token)}`,
-    });
-    const data = await response.json();
-    return data.success;
-  } catch (error) {
-    console.error("Turnstile verification error:", error);
-    // If it's a local development environment and we encounter a network fetch error, bypass the verification
-    if (process.env.NODE_ENV === "development") {
-      console.warn("Turnstile network verification failed in development. Bypassing check.");
-      return true;
-    }
-    return false;
-  }
-}
-
-export async function submitContactForm(formData: any, clientIp: string = "unknown", turnstileToken?: string) {
+export async function submitContactForm(formData: any, clientIp: string = "unknown") {
   try {
     // 1. Rate Limiting Check (Max 1 submit per 60 seconds)
     const now = Date.now();
@@ -55,17 +28,7 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
       return { success: false, error: "Submission blocked by spam filters." };
     }
 
-    // 2b. Turnstile Verification Check
-    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
-    if (turnstileSecret) {
-      if (!turnstileToken) {
-        return { success: false, error: "Spam verification token is missing. Please try again." };
-      }
-      const isVerified = await verifyTurnstileToken(turnstileToken, turnstileSecret);
-      if (!isVerified) {
-        return { success: false, error: "Spam verification failed. Please try again." };
-      }
-    }
+    // Turnstile verification removed as Web3Forms handles spam.
 
     // 3. Zod validation
     const parsedData = contactSchema.safeParse({
@@ -115,71 +78,49 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
     
     fs.writeFileSync(dbPath, JSON.stringify(database, null, 2));
 
-    // 6. Resend Email Deliveries
+    // 6. Web3Forms API Integration (Main Email Receiver for Admin)
+    const web3formsAccessKey = "09897199-a6c3-4b13-9e30-d20c6c861b9b";
+    
+    try {
+      const web3Response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: web3formsAccessKey,
+          subject: "New Contact Form Submission - Caregivers Nearby",
+          from_name: "Caregivers Nearby Website",
+          name: `${data.firstName} ${data.lastName}`,
+          email: data.email, // This allows Web3Forms to send an auto-response to the user if enabled
+          phone: data.phone,
+          service_needed: data.serviceNeeded,
+          preferred_contact: data.preferredContact,
+          message: data.message,
+          timestamp: new Date().toLocaleString(),
+          ip_address: clientIp,
+          // Adding logo field as requested, which Web3Forms can use in its email templates
+          logo: "https://www.caregiversnearby.com/logo/logo.svg"
+        }),
+      });
+
+      const web3Result = await web3Response.json();
+      if (!web3Result.success) {
+        console.error("Web3Forms error details:", web3Result);
+        return { success: false, error: web3Result.message || "Failed to submit request via Web3Forms. Please try again." };
+      }
+    } catch (web3Error: any) {
+      console.error("Web3Forms network error:", web3Error);
+      return { success: false, error: "Network error trying to contact Web3Forms. Please try again." };
+    }
+
+    // 7. Resend Email Delivery (Visitor Confirmation Email Fallback)
     const apiKey = process.env.RESEND_API_KEY;
-    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || "caregiversnearby@gmail.com";
     const fromEmail = process.env.FROM_EMAIL || "onboarding@resend.dev";
 
     if (apiKey) {
       const resend = new Resend(apiKey);
-
-      // A. Admin notification email
-      await resend.emails.send({
-        from: `Caregivers Nearby Portal <${fromEmail}>`,
-        to: receiverEmail,
-        subject: "New Contact Form Submission - Caregivers Nearby",
-        html: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #E5EEF5; border-radius: 20px; background-color: #FFFFFF;">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <h2 style="color: #0B2D52; margin: 0; font-size: 24px; font-weight: bold; letter-spacing: -0.5px;">New Contact Form Submission</h2>
-              <p style="color: #0DB7C8; margin: 5px 0 0 0; font-size: 14px; font-weight: 600; text-transform: uppercase; tracking-wider;">Caregivers Nearby</p>
-            </div>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
-              <tr>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600; width: 40%;">First Name</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;">${data.firstName}</td>
-              </tr>
-              <tr>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Last Name</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;">${data.lastName}</td>
-              </tr>
-              <tr>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Email Address</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;"><a href="mailto:${data.email}" style="color: #0DB7C8; text-decoration: none;">${data.email}</a></td>
-              </tr>
-              <tr>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Phone Number</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;"><a href="tel:${data.phone}" style="color: #0DB7C8; text-decoration: none;">${data.phone}</a></td>
-              </tr>
-              <tr>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Service Needed</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52; text-transform: capitalize;">${data.serviceNeeded.replace(/-/g, " ")}</td>
-              </tr>
-              <tr>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Preferred Contact Method</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52; text-transform: capitalize;">${data.preferredContact}</td>
-              </tr>
-              <tr>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Date & Time</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;">${new Date().toLocaleString()}</td>
-              </tr>
-              <tr>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">IP Address</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;">${clientIp}</td>
-              </tr>
-            </table>
-            <div style="margin-bottom: 20px;">
-              <h4 style="color: #0B2D52; margin: 0 0 10px 0; font-size: 16px; font-weight: bold;">Message / Care Details</h4>
-              <div style="background-color: #F8FBFD; border-left: 4px solid #0DB7C8; padding: 15px; border-radius: 4px; color: #0B2D52; line-height: 1.6; font-size: 15px;">
-                ${data.message.replace(/\n/g, "<br/>")}
-              </div>
-            </div>
-          </div>
-        `,
-      });
-
-      // B. Visitor confirmation email
-      await resend.emails.send({
         from: `Caregivers Nearby <${fromEmail}>`,
         to: data.email,
         subject: "We've Received Your Request",
@@ -209,15 +150,10 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
             </div>
           </div>
         `,
-      });
-    } else {
-      console.log("-----------------------------------------");
-      console.log("MOCK EMAIL NOTIFICATION (Resend API key not set)");
-      console.log(`To: ${receiverEmail}`);
-      console.log(`Subject: New Contact Form Submission - Caregivers Nearby`);
-      console.log(`To: ${data.email}`);
-      console.log(`Subject: We've Received Your Request`);
-      console.log("-----------------------------------------");
+      } catch (resendError) {
+        // Log the error but do not fail the request since Web3Forms successfully notified the admin
+        console.error("Resend auto-response email to visitor failed:", resendError);
+      }
     }
 
     return { success: true };

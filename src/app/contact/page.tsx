@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import Script from "next/script";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Phone, Mail, Clock, ShieldCheck, AlertCircle, CheckCircle2, Send, Heart } from "lucide-react";
@@ -16,30 +15,6 @@ export default function Contact() {
   const [success, setSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Define the Turnstile load callback on the window
-    (window as any).onloadTurnstileCallback = () => {
-      if ((window as any).turnstile) {
-        (window as any).turnstile.render("#turnstile-container", {
-          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY || "1x00000000000000000000AA",
-          theme: "light",
-        });
-      }
-    };
-
-    // If turnstile script is already loaded and window.turnstile is available
-    if ((window as any).turnstile) {
-      try {
-        (window as any).turnstile.render("#turnstile-container", {
-          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY || "1x00000000000000000000AA",
-          theme: "light",
-        });
-      } catch (e) {
-        // Already rendered or container not ready yet
-      }
-    }
-  }, []);
 
   const {
     register,
@@ -64,11 +39,9 @@ export default function Contact() {
       honeypot: (document.getElementById("honeypot") as HTMLInputElement)?.value || "",
     };
 
-    const turnstileToken = (document.getElementsByName("cf-turnstile-response")[0] as HTMLInputElement)?.value || "";
-
     try {
       // Execute Next.js Server Action
-      const result = await submitContactForm(payload, "client-browser", turnstileToken);
+      const result = await submitContactForm(payload, "client-browser");
       if (result.success) {
         setSuccess(true);
         setToastMessage("Inquiry submitted successfully!");
@@ -391,11 +364,6 @@ export default function Contact() {
                     )}
                   </div>
 
-                  {/* Cloudflare Turnstile Spam Check */}
-                  <div className="flex justify-center my-2">
-                    <div id="turnstile-container"></div>
-                  </div>
-
                   <Button
                     type="submit"
                     disabled={isSubmitting}
@@ -413,26 +381,6 @@ export default function Contact() {
           </div>
         </div>
       </section>
-      <Script id="turnstile-callback">
-        {`
-          window.onloadTurnstileCallback = function() {
-            if (window.turnstile) {
-              try {
-                window.turnstile.render('#turnstile-container', {
-                  sitekey: '${process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY || "1x00000000000000000000AA"}',
-                  theme: 'light'
-                });
-              } catch (e) {
-                console.error("Turnstile render error:", e);
-              }
-            }
-          };
-        `}
-      </Script>
-      <Script 
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback&render=explicit" 
-        strategy="afterInteractive" 
-      />
 
       {/* Success Toast */}
       {toastMessage && (
