@@ -21,13 +21,18 @@ export default function Contact() {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
       preferredContact: "email",
       agreeToContact: false,
+      serviceNeeded: "",
+      otherService: "",
     },
   });
+
+  const selectedService = watch("serviceNeeded");
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
@@ -42,9 +47,11 @@ export default function Contact() {
     try {
       // 1. Client-Side Web3Forms Submission (Main Admin Email)
       // Web3Forms blocks server-side requests to prevent spam, so it MUST run in the browser.
-      const formattedService = data.serviceNeeded
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase());
+      const formattedService = data.serviceNeeded === "other" && data.otherService
+        ? `Other: ${data.otherService}`
+        : data.serviceNeeded
+            .replace(/-/g, " ")
+            .replace(/\b\w/g, (c) => c.toUpperCase());
       const formattedPreferredContact = data.preferredContact
         .replace(/\b\w/g, (c) => c.toUpperCase());
 
@@ -105,6 +112,7 @@ export default function Contact() {
     { value: "hospital-transition", label: "Hospital Transition" },
     { value: "respite-care", label: "Respite Care" },
     { value: "alzheimers-care", label: "Alzheimer's & Dementia Support" },
+    { value: "other", label: "Other (Please specify)" },
   ];
 
   const breadcrumbData = [
@@ -334,6 +342,28 @@ export default function Contact() {
                       </span>
                     )}
                   </div>
+
+                  {selectedService === "other" && (
+                    <div className="flex flex-col gap-2 animate-fadeIn">
+                      <label htmlFor="otherService" className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                        Custom Service Choice *
+                      </label>
+                      <input
+                        id="otherService"
+                        type="text"
+                        placeholder="Please specify your needed service"
+                        className={`w-full px-5 py-4 rounded-2xl border text-base transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue ${errors.otherService ? "border-red-300 bg-[#FFF5F5]" : "border-slate-200 bg-[#FAFAFA]"
+                          }`}
+                        {...register("otherService")}
+                      />
+                      {errors.otherService && (
+                        <span className="text-xs text-red-500 flex items-center gap-1.5 mt-1">
+                          <AlertCircle size={14} />
+                          {errors.otherService.message}
+                        </span>
+                      )}
+                    </div>
+                  )}
 
                   <div className="flex flex-col gap-2">
                     <label htmlFor="message" className="text-xs font-bold text-slate-400 uppercase tracking-wider">

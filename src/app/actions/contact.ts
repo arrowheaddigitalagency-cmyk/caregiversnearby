@@ -36,6 +36,7 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
       email: formData.email,
       phone: formData.phone,
       serviceNeeded: formData.serviceNeeded,
+      otherService: formData.otherService,
       message: formData.message,
       preferredContact: formData.preferredContact,
       agreeToContact: formData.agreeToContact === "true" || formData.agreeToContact === true,
@@ -59,6 +60,11 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
     if (apiKey) {
       const resend = new Resend(apiKey);
       const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || "caregiversnearby@gmail.com";
+
+      let formattedService = data.serviceNeeded.replace(/-/g, " ");
+      if (data.serviceNeeded === "other" && data.otherService) {
+        formattedService = `Other: ${data.otherService}`;
+      }
 
       // A. Admin notification email
       try {
@@ -88,7 +94,7 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
                 </tr>
                 <tr>
                   <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Service Needed</td>
-                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52; text-transform: capitalize;">${data.serviceNeeded.replace(/-/g, " ")}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;">${formattedService}</td>
                 </tr>
                 <tr>
                   <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Preferred Contact Method</td>
