@@ -19,24 +19,24 @@ export default function JsonLd({ type, data }: JsonLdProps) {
       "email": SITE_INFO.email,
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "100 Medical Center Parkway, Suite 500",
-        "addressLocality": "Boston",
-        "addressRegion": "MA",
-        "postalCode": "02111",
+        "streetAddress": "1141 Hawthorne Circle",
+        "addressLocality": "Madison",
+        "addressRegion": "GA",
+        "postalCode": "30650",
         "addressCountry": "US"
       },
       "url": "https://www.caregiversnearby.com",
-      "description": "Find trusted local caregivers for seniors and adults in Massachusetts. Offering companion care, light housekeeping, respite care, and specialized memory support.",
+      "description": "Find trusted local caregivers for seniors and adults in Georgia. Offering companion care, light housekeeping, respite care, and specialized memory support throughout Morgan, Greene, Putnam, Bibb, Hancock, Oconee, Clarke, and Baldwin counties.",
       "openingHours": "Mo-Su 00:00-23:59",
       "priceRange": "$$",
       "areaServed": [
         {
           "@type": "AdministrativeArea",
-          "name": "Massachusetts"
+          "name": "Georgia"
         },
         {
           "@type": "AdministrativeArea",
-          "name": "New England"
+          "name": "Madison"
         }
       ]
     };

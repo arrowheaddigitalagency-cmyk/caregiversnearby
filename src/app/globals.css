@@ -1,17 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-navy: #0F172A;
-  --color-brand-navy-light: #1E293B;
-  --color-brand-blue: #2563EB;
-  --color-brand-blue-hover: #1D4ED8;
-  --color-brand-sky: #F0F9FF;
-  --color-brand-sky-medium: #E0F2FE;
-  --color-brand-teal: #0D9488;
-  --color-brand-teal-hover: #0F766E;
-  --color-brand-emerald: #10B981;
-  --color-brand-emerald-hover: #059669;
-  --color-brand-gold: #F59E0B;
+  --color-brand-navy: #0B2D52;
+  --color-brand-navy-light: #164375;
+  --color-brand-blue: #0B2D52;
+  --color-brand-blue-hover: #07213d;
+  --color-brand-sky: #F8FBFD;
+  --color-brand-sky-medium: #E5EEF5;
+  --color-brand-teal: #0DB7C8;
+  --color-brand-teal-hover: #0ba2b2;
+  --color-brand-emerald: #F45B8A;
+  --color-brand-emerald-hover: #d93d6b;
+  --color-brand-gold: #F45B8A;
+  
+  /* Remap slate colors to match brand design system */
+  --color-slate-50: #F8FBFD;
+  --color-slate-100: #E5EEF5;
+  --color-slate-200: #d6e2ed;
+  --color-slate-300: #b8cfdf;
+  --color-slate-400: #62819f;
+  --color-slate-500: #62819f;
+  --color-slate-600: #0B2D52;
   
   --font-sans: var(--font-inter);
   --font-heading: var(--font-plus-jakarta-sans);
@@ -71,6 +80,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Accessible focus outline */
 *:focus-visible {
-  outline: 2px solid #2563EB;
+  outline: 2px solid #0DB7C8;
   outline-offset: 4px;
+}
+
+/* Force hardcoded #FAFAFA backgrounds to use brand Light Background #F8FBFD */
+[class*="bg-[#FAFAFA]"], .bg-\[\#FAFAFA\] {
+  background-color: #F8FBFD !important;
 }

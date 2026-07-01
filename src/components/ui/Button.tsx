@@ -24,11 +24,11 @@ export default function Button({
   const baseStyles = "inline-flex items-center justify-center font-medium rounded-xl transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 active:scale-98 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
   
   const variants = {
-    primary: "bg-brand-blue text-white shadow-md shadow-brand-blue/10 hover:bg-brand-blue-hover hover:shadow-lg hover:shadow-brand-blue/20 hover:-translate-y-0.5",
+    primary: "bg-gradient-to-r from-brand-teal to-brand-blue text-white shadow-md shadow-brand-teal/15 hover:opacity-95 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300",
     secondary: "bg-brand-teal text-white shadow-md shadow-brand-teal/10 hover:bg-brand-teal-hover hover:shadow-lg hover:shadow-brand-teal/20 hover:-translate-y-0.5",
-    outline: "border border-slate-200 bg-white/50 backdrop-blur-sm text-brand-navy hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm hover:-translate-y-0.5",
-    ghost: "text-brand-navy hover:bg-slate-100 hover:text-brand-navy-light",
-    gold: "bg-brand-gold text-white shadow-md shadow-brand-gold/10 hover:bg-amber-600 hover:shadow-lg hover:shadow-brand-gold/20 hover:-translate-y-0.5",
+    outline: "border border-slate-100 bg-white/50 backdrop-blur-sm text-brand-navy hover:bg-slate-50 hover:border-slate-200 hover:shadow-sm hover:-translate-y-0.5",
+    ghost: "text-brand-navy hover:bg-slate-50 hover:text-brand-navy-light",
+    gold: "bg-brand-gold text-white shadow-md shadow-brand-gold/10 hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5",
   };
 
   const sizes = {

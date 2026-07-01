@@ -23,8 +23,10 @@ import {
   Clock,
   HelpCircle,
   TrendingUp,
+  Activity,
+  Phone
 } from "lucide-react";
-import { SERVICES, WHY_US, STEPS, TESTIMONIALS, FAQS, SITE_INFO, RECRUITMENT_BENEFITS } from "@/lib/data/content";
+import { SERVICES, WHY_US, STEPS, TESTIMONIALS, FAQS, SITE_INFO } from "@/lib/data/content";
 import Button from "@/components/ui/Button";
 import Accordion from "@/components/ui/Accordion";
 import JsonLd from "@/components/seo/JsonLd";
@@ -41,273 +43,284 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   Heart,
   TrendingUp,
   Users,
+  Activity
 };
 
+const stepIcons = [Phone, Calendar, Users, Heart, CheckCircle2];
+
 export default function Home() {
-  // Bento grid mapping: service id -> grid span and visual layout type
   const bentoServices = [
     {
       ...SERVICES[0], // Companion Care
-      size: "large",
-      cols: "lg:col-span-3 md:col-span-6 col-span-12",
+      cols: "col-span-12 lg:col-span-8",
       image: "/images/services/companion-care.jpg",
       number: "01",
+      heightClass: "h-[28rem]",
     },
     {
       ...SERVICES[1], // Personal Assistance
-      size: "large",
-      cols: "lg:col-span-3 md:col-span-6 col-span-12",
+      cols: "col-span-12 lg:col-span-4",
       image: "/images/services/personal-assistance.jpg",
       number: "02",
+      heightClass: "h-[28rem]",
     },
     {
       ...SERVICES[2], // Meal Preparation
-      size: "medium",
-      cols: "lg:col-span-2 md:col-span-4 col-span-12",
+      cols: "col-span-12 md:col-span-6 lg:col-span-4",
       image: "/images/services/meal-preparation.jpg",
       number: "03",
+      heightClass: "h-96",
     },
     {
       ...SERVICES[3], // Medication Reminders
-      size: "medium",
-      cols: "lg:col-span-2 md:col-span-4 col-span-12",
+      cols: "col-span-12 md:col-span-6 lg:col-span-4",
       image: "/images/services/medication-reminders.jpg",
       number: "04",
+      heightClass: "h-96",
     },
     {
       ...SERVICES[4], // Transportation
-      size: "medium",
-      cols: "lg:col-span-2 md:col-span-4 col-span-12",
+      cols: "col-span-12 lg:col-span-4",
       image: "/images/services/transportation.jpg",
       number: "05",
+      heightClass: "h-96",
     },
     {
       ...SERVICES[5], // Errands & Shopping
-      size: "medium",
-      cols: "lg:col-span-2 md:col-span-4 col-span-12",
+      cols: "col-span-12 lg:col-span-7",
       image: "/images/services/errands-shopping.jpg",
       number: "06",
+      heightClass: "h-[30rem]",
     },
     {
       ...SERVICES[6], // Light Housekeeping
-      size: "medium",
-      cols: "lg:col-span-2 md:col-span-4 col-span-12",
+      cols: "col-span-12 lg:col-span-5",
       image: "/images/services/light-housekeeping.jpg",
       number: "07",
+      heightClass: "h-[30rem]",
     },
     {
       ...SERVICES[7], // Hospital Transition
-      size: "medium",
-      cols: "lg:col-span-2 md:col-span-4 col-span-12",
+      cols: "col-span-12 md:col-span-6 lg:col-span-6",
       image: "/images/services/hospital-transition.jpg",
       number: "08",
+      heightClass: "h-[26rem]",
     },
     {
       ...SERVICES[8], // Respite Care
-      size: "large",
-      cols: "lg:col-span-3 md:col-span-6 col-span-12",
+      cols: "col-span-12 md:col-span-6 lg:col-span-6",
       image: "/images/services/respite-care.jpg",
       number: "09",
+      heightClass: "h-[26rem]",
     },
     {
       ...SERVICES[9], // Alzheimer's Care
-      size: "large",
-      cols: "lg:col-span-3 md:col-span-6 col-span-12",
+      cols: "col-span-12",
       image: "/images/services/alzheimers-care.jpg",
       number: "10",
+      heightClass: "h-[36rem]",
     },
   ];
 
   return (
-    <div className="relative">
+    <div className="relative bg-[#FAFAFA]">
       <JsonLd type="LocalBusiness" />
       <JsonLd type="FAQ" data={FAQS} />
 
       {/* 1. HERO SECTION */}
-      <section id="hero" className="relative overflow-hidden bg-white pt-10 pb-20 md:py-24">
-        {/* Soft blue gradients */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-brand-sky-medium/35 blur-3xl -z-10 translate-x-1/4 -translate-y-1/4"></div>
-        <div className="absolute top-1/3 left-0 w-[450px] h-[450px] rounded-full bg-sky-50/70 blur-3xl -z-10 -translate-x-1/3"></div>
+      <section id="hero" className="relative overflow-hidden bg-[#FAFAFA] pt-20 pb-32 min-h-[600px] lg:min-h-[750px] flex items-center">
+        {/* Background Image Container with opacity overlay */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/hero/hero-trust.png"
+            alt="Professional caregiver helping an elderly woman walk"
+            fill
+            className="object-cover object-right lg:object-center"
+            priority
+          />
+          {/* Desktop Left-to-Right Fade */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FAFAFA] via-[#FAFAFA]/95 to-transparent z-10 hidden lg:block w-full"></div>
+          {/* Mobile Top-to-Bottom Fade */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FAFAFA] via-[#FAFAFA]/90 to-[#FAFAFA]/40 z-10 lg:hidden block"></div>
+        </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
-            {/* Left Column */}
-            <div className="lg:col-span-6 flex flex-col items-start text-left">
+            {/* Left Column - Text Content */}
+            <div className="lg:col-span-7 flex flex-col items-start text-left z-20">
+              
+              {/* Small Trust Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-blue/10 text-brand-blue text-xs font-bold tracking-wide uppercase mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-100 shadow-sm text-brand-navy font-semibold text-xs tracking-wider uppercase mb-6"
               >
-                <Heart size={12} className="fill-brand-blue/10" />
-                <span>Premium In-Home Support Network</span>
+                <span className="w-2 h-2 rounded-full bg-brand-emerald animate-pulse"></span>
+                <span>Premium In-Home Care Network</span>
               </motion.div>
 
+              {/* Large Emotional Headline */}
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-navy tracking-tight leading-[1.08] mb-6"
+                className="text-5xl sm:text-6xl lg:text-7xl font-bold text-brand-navy tracking-tight leading-[1.05] mb-6"
               >
                 Compassionate Care.<br />
-                <span className="bg-gradient-to-r from-brand-blue to-brand-teal bg-clip-text text-transparent">Trusted Caregivers.</span><br />
+                <span className="text-brand-blue bg-gradient-to-r from-brand-blue to-brand-teal bg-clip-text text-transparent">Trusted Professionals.</span><br />
                 Right Nearby.
               </motion.h1>
 
+              {/* Supporting Paragraph */}
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-base sm:text-lg leading-relaxed text-slate-500 max-w-xl mb-8"
+                className="text-lg sm:text-xl leading-relaxed text-slate-600 max-w-xl mb-8 font-light"
               >
                 We connect families with certified, empathetic local caregivers. Experience custom home care blueprints designed for safety, comfort, and real human connection.
               </motion.p>
 
-              {/* CTAs */}
+              {/* CTA Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-10"
               >
-                <Button href="/contact" variant="primary" size="lg">
-                  Request Care
+                <Button href="/contact" variant="primary" size="lg" className="h-14 px-8 text-base shadow-xl shadow-brand-blue/20">
+                  Find Your Caregiver
                 </Button>
-                <Button href="/about" variant="outline" size="lg">
-                  Learn About Us
+                <Button href="/about" variant="outline" size="lg" className="h-14 px-8 text-base bg-white">
+                  Discover Our Story
                 </Button>
               </motion.div>
 
-              {/* Inline trust items */}
+              {/* Below CTA: Trust Metrics */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="flex flex-wrap gap-x-6 gap-y-3 border-t border-slate-100 pt-6 w-full max-w-lg"
+                className="flex flex-wrap gap-x-8 gap-y-4 border-t border-slate-100 pt-6 w-full max-w-xl"
               >
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-                  <CheckCircle2 className="text-brand-emerald shrink-0" size={15} />
-                  <span>Licensed &amp; Insured</span>
+                <div>
+                  <p className="text-2xl font-bold text-brand-navy">100%</p>
+                  <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Vetted Caregivers</p>
                 </div>
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-                  <CheckCircle2 className="text-brand-emerald shrink-0" size={15} />
-                  <span>CNA &amp; HHA Mentored</span>
+                <div className="border-l border-slate-200 pl-8">
+                  <p className="text-2xl font-bold text-brand-navy">24/7</p>
+                  <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">On-Call Support</p>
                 </div>
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-                  <CheckCircle2 className="text-brand-emerald shrink-0" size={15} />
-                  <span>24/7 On-Call Support</span>
+                <div className="border-l border-slate-200 pl-8">
+                  <p className="text-2xl font-bold text-brand-navy">Local</p>
+                  <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Community Experts</p>
                 </div>
               </motion.div>
+
             </div>
 
-            {/* Right Column: Premium Image & Floating Badges */}
-            <div className="lg:col-span-6 relative flex justify-center items-center">
+            {/* Right Column: Floating Badges (overlaying background image) */}
+            <div className="lg:col-span-5 relative h-[300px] lg:h-[550px] w-full flex justify-center items-center">
+              
+              {/* Trust Badges - translateY + opacity animations */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="relative w-full max-w-lg aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-100 bg-white"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: [0, -8, 0] }}
+                transition={{ 
+                  opacity: { duration: 0.6, delay: 0.5 },
+                  y: { repeat: Infinity, duration: 5, ease: "easeInOut" }
+                }}
+                className="absolute top-4 left-4 lg:-left-12 bg-white/95 backdrop-blur-md shadow-premium px-5 py-3 rounded-2xl flex items-center gap-3 border border-white/60 select-none z-20"
               >
-                <Image
-                  src="/images/hero/hero.jpg"
-                  alt="Compassionate Caregiver helping a senior woman walk"
-                  fill
-                  className="object-cover object-center"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent"></div>
-              </motion.div>
-
-              {/* Floating Badges */}
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-12 -left-6 sm:-left-12 glass-panel shadow-premium px-4 py-3 rounded-2xl flex items-center gap-2.5 border border-white/60 select-none"
-              >
-                <div className="w-8 h-8 rounded-lg bg-brand-emerald/10 text-brand-emerald flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-brand-emerald/10 text-brand-emerald flex items-center justify-center shrink-0">
                   <ShieldCheck size={18} />
                 </div>
-                <div className="text-left text-xs font-bold text-brand-navy">Background Checked</div>
+                <span className="font-bold text-brand-navy text-sm">Background Checked</span>
               </motion.div>
 
               <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                className="absolute top-1/2 -right-4 sm:-right-8 glass-panel shadow-premium px-4 py-3 rounded-2xl flex items-center gap-2.5 border border-white/60 select-none"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: [0, 8, 0] }}
+                transition={{ 
+                  opacity: { duration: 0.6, delay: 0.6 },
+                  y: { repeat: Infinity, duration: 6, ease: "easeInOut", delay: 0.3 }
+                }}
+                className="absolute top-1/4 right-4 lg:-right-8 bg-white/95 backdrop-blur-md shadow-premium px-5 py-3 rounded-2xl flex items-center gap-3 border border-white/60 select-none z-20"
               >
-                <div className="w-8 h-8 rounded-lg bg-brand-blue/10 text-brand-blue flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-brand-blue/10 text-brand-blue flex items-center justify-center shrink-0">
                   <Heart size={18} className="fill-brand-blue/10" />
                 </div>
-                <div className="text-left text-xs font-bold text-brand-navy">Trusted Caregivers</div>
+                <span className="font-bold text-brand-navy text-sm">Trusted by Families</span>
               </motion.div>
 
               <motion.div
-                animate={{ y: [0, -7, 0] }}
-                transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute -bottom-4 left-6 glass-panel shadow-premium px-4 py-3 rounded-2xl flex items-center gap-2.5 border border-white/60 select-none"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: [0, -10, 0] }}
+                transition={{ 
+                  opacity: { duration: 0.6, delay: 0.7 },
+                  y: { repeat: Infinity, duration: 5.5, ease: "easeInOut", delay: 0.6 }
+                }}
+                className="absolute bottom-12 left-8 lg:-left-4 bg-white/95 backdrop-blur-md shadow-premium px-5 py-3 rounded-2xl flex items-center gap-3 border border-white/60 select-none z-20"
               >
-                <div className="w-8 h-8 rounded-lg bg-brand-teal/10 text-brand-teal flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-brand-teal/10 text-brand-teal flex items-center justify-center shrink-0">
                   <MapPin size={18} />
                 </div>
-                <div className="text-left text-xs font-bold text-brand-navy">Available Nearby</div>
+                <span className="font-bold text-brand-navy text-sm">Local Caregivers</span>
               </motion.div>
 
               <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-                className="absolute bottom-1/3 -left-8 glass-panel shadow-premium px-4 py-3 rounded-2xl flex items-center gap-2.5 border border-white/60 select-none"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: [0, 6, 0] }}
+                transition={{ 
+                  opacity: { duration: 0.6, delay: 0.8 },
+                  y: { repeat: Infinity, duration: 4.8, ease: "easeInOut", delay: 0.9 }
+                }}
+                className="absolute bottom-24 right-8 lg:right-12 bg-white/95 backdrop-blur-md shadow-premium px-5 py-3 rounded-2xl flex items-center gap-3 border border-white/60 select-none z-20"
               >
-                <div className="w-8 h-8 rounded-lg bg-brand-blue/10 text-brand-blue flex items-center justify-center shrink-0">
-                  <Star size={18} className="fill-brand-blue/10" />
-                </div>
-                <div className="text-left text-xs font-bold text-brand-navy">Family Approved</div>
-              </motion.div>
-
-              <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                className="absolute top-1/4 -right-12 glass-panel shadow-premium px-4 py-3 rounded-2xl flex items-center gap-2.5 border border-white/60 select-none"
-              >
-                <div className="w-8 h-8 rounded-lg bg-brand-gold/10 text-brand-gold flex items-center justify-center shrink-0">
-                  <Calendar size={18} />
-                </div>
-                <div className="text-left text-xs font-bold text-brand-navy">Flexible Scheduling</div>
-              </motion.div>
-
-              <motion.div
-                animate={{ y: [0, 9, 0] }}
-                transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
-                className="absolute -bottom-6 right-10 glass-panel shadow-premium px-4 py-3 rounded-2xl flex items-center gap-2.5 border border-white/60 select-none"
-              >
-                <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center shrink-0">
                   <Heart size={18} className="fill-rose-50" />
                 </div>
-                <div className="text-left text-xs font-bold text-brand-navy">Compassion First</div>
+                <span className="font-bold text-brand-navy text-sm">Compassion First</span>
               </motion.div>
-            </div>
 
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: [0, -6, 0] }}
+                transition={{ 
+                  opacity: { duration: 0.6, delay: 0.9 },
+                  y: { repeat: Infinity, duration: 5.2, ease: "easeInOut", delay: 1.2 }
+                }}
+                className="absolute top-1/2 left-4 lg:-left-20 hidden xl:flex bg-white/95 backdrop-blur-md shadow-premium px-5 py-3 rounded-2xl items-center gap-3 border border-white/60 select-none z-20"
+              >
+                <div className="w-8 h-8 rounded-xl bg-brand-sky flex items-center justify-center shrink-0 text-brand-blue">
+                  <Users size={18} />
+                </div>
+                <span className="font-bold text-brand-navy text-sm">Personalized Matching</span>
+              </motion.div>
+
+            </div>
           </div>
         </div>
       </section>
 
       {/* 2. TRUST BAR */}
-      <section className="bg-slate-50 border-y border-slate-100 py-6 overflow-hidden">
+      <section className="bg-brand-navy py-8 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6">
-            <span className="text-xs uppercase font-bold tracking-wider text-slate-400 mr-2">Our Standards:</span>
+          <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-10">
             {[
               "Carefully Screened Caregivers",
-              "Flexible Scheduling",
               "Personalized Care Plans",
               "Trusted by Families",
-              "Non-Medical Home Care"
+              "Non-Medical Home Care",
+              "Peace of Mind"
             ].map((pill, idx) => (
-              <div 
+              <div
                 key={idx}
-                className="glass-panel shadow-premium px-4 py-2 rounded-full text-xs font-bold text-slate-600 border border-white flex items-center gap-1.5 select-none"
+                className="flex items-center gap-2.5 text-sm font-semibold text-slate-300 select-none"
               >
-                <CheckCircle2 className="text-brand-teal w-3.5 h-3.5" />
+                <CheckCircle2 className="text-brand-teal w-4 h-4" />
                 <span>{pill}</span>
               </div>
             ))}
@@ -316,224 +329,247 @@ export default function Home() {
       </section>
 
       {/* 3. SERVICES SECTION (Redesigned Editorial Bento Grid) */}
-      <section id="services" className="py-20 bg-white">
+      <section id="services" className="py-24 bg-[#FAFAFA]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs uppercase tracking-widest text-brand-teal font-bold mb-3 inline-block">
-              Intelligent Home Blueprints
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-brand-navy tracking-tight mb-4">
-              Comprehensive Care Blueprints
+          <div className="max-w-3xl mb-16">
+            <h2 className="text-4xl sm:text-5xl font-bold text-brand-navy tracking-tight mb-6 leading-tight">
+              A New Standard <br/> in Home Care.
             </h2>
-            <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
-              Explore our core non-medical services. Each card is custom-proportioned inside an editorial grid layout representing specialized pathways.
+            <p className="text-slate-500 text-lg sm:text-xl leading-relaxed font-light">
+              We provide tailored care pathways designed with empathy, clinical insight, and a deep understanding of your family's unique needs.
             </p>
           </div>
 
           {/* Bento Grid */}
-          <div className="grid grid-cols-12 gap-8 items-stretch">
+          <div className="grid grid-cols-12 gap-6 items-stretch">
             {bentoServices.map((service, idx) => {
               const IconComp = iconMap[service.iconName] || Heart;
-              const isLarge = service.size === "large";
 
               return (
-                <div
+                <Link
+                  href="/contact"
                   key={service.id}
-                  className={`${service.cols} flex`}
+                  className={`${service.cols} group relative rounded-3xl overflow-hidden cursor-pointer ${service.heightClass}`}
                 >
-                  <div className="group relative w-full flex flex-col justify-between bg-slate-50/50 border border-slate-100 rounded-3xl overflow-hidden shadow-premium hover:shadow-xl hover:border-brand-blue/20 hover:-translate-y-1 transition-all duration-500 ease-out p-6 sm:p-8">
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                  
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500"></div>
+                  
+                  <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20 shadow-xl group-hover:scale-110 transition-transform duration-500">
+                        <IconComp size={24} strokeWidth={1.5} />
+                      </div>
+                      <span className="text-white/60 font-medium tracking-widest text-sm">{service.number}</span>
+                    </div>
+
+                    <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+                      {service.title}
+                    </h3>
                     
-                    {/* Background visual border helper */}
-                    <div className="absolute inset-0 rounded-3xl p-[1.5px] bg-gradient-to-tr from-brand-blue/0 via-transparent to-brand-teal/0 group-hover:from-brand-blue/15 group-hover:via-transparent group-hover:to-brand-teal/15 transition-all duration-500 -z-10"></div>
-                    <div className="absolute inset-[1.5px] bg-white rounded-3xl -z-10"></div>
-
-                    {/* Image Box */}
-                    <div className={`relative w-full rounded-2xl overflow-hidden mb-6 ${isLarge ? "h-64 sm:h-72" : "h-48"}`}>
-                      <Image
-                        src={service.image}
-                        alt={service.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      />
-                      {/* Floating Glass Icon Badge */}
-                      <div className="absolute bottom-4 left-4 w-11 h-11 rounded-xl bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-md text-brand-blue border border-white/40 group-hover:bg-brand-blue group-hover:text-white transition-colors duration-300">
-                        <IconComp size={20} />
-                      </div>
-                      {/* Service Index Number */}
-                      <span className="absolute top-4 right-4 bg-brand-navy/60 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-extrabold text-white tracking-widest select-none">
-                        {service.number}
-                      </span>
-                    </div>
-
-                    {/* Copy Content */}
-                    <div className="text-left flex-grow flex flex-col justify-between">
-                      <div>
-                        <h3 className="text-lg sm:text-xl font-bold text-brand-navy mb-2 group-hover:text-brand-blue transition-colors duration-300">
-                          {service.title}
-                        </h3>
-                        <p className="text-xs sm:text-sm text-slate-500 leading-relaxed mb-6">
-                          {service.description}
-                        </p>
-                      </div>
-
-                      {/* Benefits Preview */}
-                      <div className="border-t border-slate-100 pt-4 mt-auto">
-                        <ul className="space-y-2 mb-6">
-                          {service.benefits.slice(0, isLarge ? 3 : 2).map((b, bidx) => (
-                            <li key={bidx} className="flex items-center gap-2 text-xs text-slate-600">
-                              <span className="w-1.5 h-1.5 rounded-full bg-brand-teal shrink-0"></span>
-                              <span className="truncate">{b}</span>
-                            </li>
-                          ))}
-                        </ul>
-
-                        <Link
-                          href="/contact"
-                          className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-teal hover:text-brand-teal-hover transition-colors group/link"
-                        >
-                          <span>Request blueprint</span>
-                          <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
-                        </Link>
+                    <div className="h-0 opacity-0 group-hover:h-auto group-hover:opacity-100 transition-all duration-500 overflow-hidden">
+                      <p className="text-white/80 text-sm leading-relaxed mb-6 font-light max-w-sm">
+                        {service.description}
+                      </p>
+                      
+                      <div className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-brand-teal group/link">
+                        <span>Learn More</span>
+                        <ArrowRight size={16} className="group-hover/link:translate-x-1 transition-transform" />
                       </div>
                     </div>
-
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* 4. WHY CHOOSE US */}
-      <section id="why-us" className="py-20 bg-slate-50/50 border-y border-slate-100">
+      {/* 4. WHY FAMILIES TRUST US */}
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs uppercase tracking-widest text-brand-blue font-bold mb-3 inline-block">
-              Vetting &amp; Safety
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-brand-navy tracking-tight mb-4">
-              Why Families Choose Caregivers Nearby
-            </h2>
-            <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
-              We stand apart through our double-checked screenings, local matches, and responsive coordination blueprints.
-            </p>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            
+            <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl lg:-translate-y-8 lg:scale-105 z-10 border border-slate-100">
+              <Image 
+                src="/images/trust/family-trust.png" 
+                alt="Family hugging and smiling with senior"
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {WHY_US.map((item, idx) => {
-              const IconComp = iconMap[item.iconName] || ShieldCheck;
-              return (
-                <div
-                  key={idx}
-                  className="bg-white border border-slate-100 p-8 rounded-3xl shadow-premium hover:shadow-lg transition-all duration-300 flex items-start gap-5 group"
-                >
-                  <div className="w-12 h-12 rounded-2xl bg-brand-sky flex items-center justify-center shrink-0 text-brand-blue shadow-sm border border-slate-100/50 group-hover:bg-brand-blue group-hover:text-white transition-colors duration-300">
-                    <IconComp className="w-6 h-6" />
+            <div>
+              <span className="text-sm uppercase tracking-widest text-brand-teal font-bold mb-4 inline-block">
+                Why Families Trust Caregivers Nearby
+              </span>
+              <h2 className="text-4xl sm:text-5xl font-bold text-brand-navy tracking-tight mb-6 leading-tight">
+                Peace of mind is our promise.
+              </h2>
+              <p className="text-slate-500 text-lg leading-relaxed font-light mb-10">
+                Finding the right caregiver shouldn't be stressful. We handle the rigorous screening, background checks, and matching process so you can focus on what matters most: your loved one.
+              </p>
+
+              <div className="space-y-6">
+                {[
+                  { title: "Carefully Screened Caregivers", desc: "Rigorous background checks and multi-step interviews." },
+                  { title: "Personalized Care Matching", desc: "We pair caregivers based on clinical needs and personality fit." },
+                  { title: "Compassion Before Everything", desc: "Empathy and kindness are non-negotiable standards." },
+                  { title: "Local Professionals", desc: "Dedicated caregivers from your own community." }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-colors">
+                    <div className="w-12 h-12 rounded-xl bg-brand-sky flex items-center justify-center shrink-0">
+                      <ShieldCheck size={24} className="text-brand-blue" />
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-brand-navy mb-1">{item.title}</h4>
+                      <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+                    </div>
                   </div>
-                  <div className="text-left">
-                    <h3 className="text-lg font-bold text-brand-navy mb-2.5 group-hover:text-brand-blue transition-colors">{item.title}</h3>
-                    <p className="text-xs sm:text-sm leading-relaxed text-slate-500">{item.description}</p>
-                  </div>
-                </div>
-              );
-            })}
+                ))}
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
       {/* 5. HOW IT WORKS */}
-      <section id="how-it-works" className="py-20 bg-white">
+      <section id="how-it-works" className="py-32 bg-[#FAFAFA] relative overflow-hidden">
+        {/* Soft background glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-brand-sky/10 blur-3xl -z-10"></div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs uppercase tracking-widest text-brand-teal font-bold mb-3 inline-block">
+          <div className="text-center max-w-3xl mx-auto mb-24">
+            <span className="text-sm uppercase tracking-widest text-brand-teal font-bold mb-4 inline-block">
               Our Journey Blueprints
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-brand-navy tracking-tight mb-4">
-              How It Works
+            <h2 className="text-4xl sm:text-5xl font-bold text-brand-navy tracking-tight mb-6">
+              A Simple Path to Care
             </h2>
-            <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
+            <p className="text-slate-500 text-lg leading-relaxed font-light">
               Securing trusted home care with Caregivers Nearby is straightforward and stress-free.
             </p>
           </div>
 
-          <div className="relative max-w-5xl mx-auto mt-12 pl-8 sm:pl-0">
-            {/* SVG Connector Dotted Path */}
-            <div className="absolute top-[48px] left-[8%] right-[8%] h-12 -z-10 hidden md:block select-none pointer-events-none">
-              <svg className="w-full h-full text-brand-blue/20" preserveAspectRatio="none" viewBox="0 0 100 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M 0 5 C 25 12, 25 -2, 50 5 C 75 12, 75 -2, 100 5" strokeDasharray="6 6" />
-              </svg>
+          <div className="relative">
+            {/* Desktop Curved Timeline Line (animated drawing) */}
+            <div className="absolute top-20 left-[10%] right-[10%] h-0.5 bg-slate-200/60 -z-10 hidden lg:block overflow-hidden">
+              <motion.div 
+                className="h-full bg-gradient-to-r from-brand-blue via-brand-teal to-brand-blue w-full"
+                initial={{ x: "-100%" }}
+                whileInView={{ x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 2, ease: "easeInOut" }}
+              />
             </div>
-            
-            <div className="block md:hidden absolute left-0 top-0 bottom-0 w-0.5 bg-slate-200/80 -translate-x-3.5 select-none pointer-events-none"></div>
 
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-              {STEPS.map((step, idx) => (
-                <div key={idx} className="flex flex-col items-start md:items-center text-left md:text-center px-4 group">
-                  <div className="w-14 h-14 rounded-full bg-white border-2 border-brand-blue text-brand-blue flex items-center justify-center font-bold text-lg shadow-md group-hover:scale-108 group-hover:bg-brand-blue group-hover:text-white transition-all duration-300 z-10 cursor-default select-none border-brand-blue/20">
-                    {step.number}
-                  </div>
-                  <h3 className="text-base font-bold text-brand-navy mt-5 mb-2.5 group-hover:text-brand-blue transition-colors">
-                    {step.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm leading-relaxed text-slate-500">
-                    {step.description}
-                  </p>
-                </div>
-              ))}
+            {/* Mobile Vertical Timeline Line (animated drawing) */}
+            <div className="absolute left-1/2 top-10 bottom-10 w-0.5 bg-slate-200/60 -translate-x-1/2 -z-10 lg:hidden overflow-hidden">
+              <motion.div 
+                className="w-full bg-gradient-to-b from-brand-blue via-brand-teal to-brand-blue h-full origin-top"
+                initial={{ scaleY: 0 }}
+                whileInView={{ scaleY: 1 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 2, ease: "easeInOut" }}
+              />
             </div>
+
+            {/* Staggered Steps Container */}
+            <motion.div 
+              className="grid grid-cols-1 lg:grid-cols-5 gap-16 lg:gap-8 relative z-10"
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={{
+                hidden: {},
+                show: {
+                  transition: {
+                    staggerChildren: 0.2
+                  }
+                }
+              }}
+            >
+              {STEPS.map((step, idx) => {
+                const IconComp = stepIcons[idx] || CheckCircle2;
+                return (
+                  <motion.div 
+                    key={idx} 
+                    className="flex flex-col items-center text-center group relative w-full"
+                    variants={{
+                      hidden: { opacity: 0, y: 30 },
+                      show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+                    }}
+                  >
+                    {/* Milestone Circle (always centered) */}
+                    <div className="relative shrink-0 mb-6 lg:mb-8 z-20">
+                      {/* Gradient Glass circle for step number */}
+                      <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-gradient-to-tr from-brand-blue to-brand-teal text-white font-bold text-xs flex items-center justify-center shadow-lg border border-white/20 z-20">
+                        {step.number}
+                      </div>
+                      
+                      {/* Large Milestone Node */}
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white border border-slate-100 shadow-xl flex items-center justify-center text-brand-blue group-hover:text-white group-hover:bg-brand-blue group-hover:border-brand-blue transition-all duration-500 scale-100 group-hover:scale-110">
+                        <IconComp size={28} strokeWidth={1.5} className="group-hover:rotate-12 transition-transform duration-500" />
+                      </div>
+                    </div>
+
+                    {/* Content Card (Desktop rises slightly) */}
+                    <div className="bg-white p-6 sm:p-8 rounded-[2rem] border border-slate-100/60 shadow-premium hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 text-center w-full z-10">
+                      <h3 className="text-xl font-bold text-brand-navy mb-3 group-hover:text-brand-blue transition-colors duration-300">
+                        {step.title}
+                      </h3>
+                      <p className="text-sm leading-relaxed text-slate-500 font-light">
+                        {step.description}
+                      </p>
+                    </div>
+
+                  </motion.div>
+                );
+              })}
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* 6. TESTIMONIALS */}
-      <section className="py-20 bg-slate-50/50 border-y border-slate-100">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs uppercase tracking-widest text-brand-blue font-bold mb-3 inline-block">
-              Family Reviews
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-brand-navy tracking-tight mb-4">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <h2 className="text-4xl sm:text-5xl font-bold text-brand-navy tracking-tight mb-6">
               Real Experiences from Real Families
             </h2>
-            <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
-              Read verified testimonials from family members who have designed care plans with our network caregivers.
-            </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {TESTIMONIALS.map((item, idx) => (
               <div
                 key={idx}
-                className="bg-white border border-slate-100/80 p-8 rounded-3xl shadow-premium hover:shadow-xl hover:-translate-y-1 transition-all duration-500 flex flex-col justify-between h-full relative overflow-hidden group"
+                className="bg-[#FAFAFA] p-10 rounded-[2.5rem] flex flex-col justify-between h-full relative"
               >
-                <div className="absolute -top-4 -right-2 text-slate-50/70 text-9xl font-serif select-none pointer-events-none group-hover:text-slate-100 transition-colors duration-300">
-                  &ldquo;
+                <div className="text-brand-blue mb-8">
+                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14.1667 15C14.1667 11.3181 17.1515 8.33333 20.8333 8.33333C24.5152 8.33333 27.5 11.3181 27.5 15C27.5 16.9142 26.6926 18.6397 25.3905 19.8519L16.6667 28.3333L14.4173 26.2422L21.724 19.1667H14.1667V15Z" fill="currentColor"/>
+                    <path d="M3.33333 15C3.33333 11.3181 6.3181 8.33333 10 8.33333C13.6819 8.33333 16.6667 11.3181 16.6667 15C16.6667 16.9142 15.8592 18.6397 14.5572 19.8519L5.83333 28.3333L3.58398 26.2422L10.8907 19.1667H3.33333V15Z" fill="currentColor"/>
+                  </svg>
                 </div>
 
-                <div className="relative z-10 text-left">
-                  <div className="flex items-center gap-1.5 text-brand-gold mb-6">
-                    {[...Array(item.stars)].map((_, i) => (
-                      <Star key={i} size={15} className="fill-brand-gold" />
-                    ))}
-                  </div>
-                  <p className="text-slate-600 text-sm sm:text-base leading-relaxed italic mb-8 relative">
-                    &ldquo;{item.quote}&rdquo;
+                <div className="relative z-10 text-left flex-grow">
+                  <p className="text-brand-navy text-lg leading-relaxed font-medium mb-10">
+                    "{item.quote}"
                   </p>
                 </div>
 
-                <div className="flex items-center gap-4 border-t border-slate-100/50 pt-5 mt-auto relative z-10">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 border border-slate-100">
-                    <Image
-                      src={`/images/testimonials/avatar${idx + 1}.jpg`}
-                      alt={item.author}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+                <div className="flex items-center gap-4 pt-6 mt-auto">
                   <div className="text-left">
-                    <p className="font-bold text-brand-navy text-sm">{item.author}</p>
-                    <p className="text-xs text-slate-400 font-semibold">{item.relation}</p>
+                    <p className="font-bold text-brand-navy text-base">{item.author}</p>
+                    <p className="text-sm text-slate-500">{item.relation}</p>
                   </div>
                 </div>
               </div>
@@ -542,116 +578,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. CAREER SECTION */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-brand-navy rounded-[2.5rem] p-8 sm:p-12 lg:p-16 text-white relative overflow-hidden shadow-xl">
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-brand-teal/10 blur-3xl -z-0 translate-x-1/4 -translate-y-1/4"></div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-              
-              {/* Left Column: Benefits */}
-              <div className="lg:col-span-7 flex flex-col items-start text-left">
-                <span className="text-xs uppercase tracking-widest text-brand-teal font-bold mb-3.5">
-                  Careers
-                </span>
-                <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-5">
-                  Join America&apos;s Most Trusted Network.
-                </h2>
-                <p className="text-slate-400 text-sm leading-relaxed mb-8 max-w-xl">
-                  We support our caregiver family with competitive pay, flexible shifts, PTO, and training.
-                </p>
-
-                {/* Benefits List */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full mb-8 border-b border-slate-800 pb-8">
-                  {RECRUITMENT_BENEFITS.map((item, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5">
-                      <CheckCircle2 className="text-brand-teal shrink-0 mt-0.5" size={16} />
-                      <div className="text-xs">
-                        <p className="font-bold text-white mb-0.5">{item.title}</p>
-                        <p className="text-slate-400 leading-normal">{item.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <Button href="/contact?subject=caregiver" variant="secondary" size="lg">
-                  Submit Caregiver Application
-                </Button>
-              </div>
-
-              {/* Right Column: Scrub Caregiver */}
-              <div className="lg:col-span-5 relative flex justify-center items-center">
-                <div className="relative w-full max-w-sm aspect-[4/5] rounded-[2rem] overflow-hidden border border-slate-800 bg-slate-900 shadow-lg">
-                  <Image
-                    src="/images/caregivers/caregivers.jpg"
-                    alt="Professional Smiling Caregiver in Scrubs"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-
-                {/* Floating Badges */}
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute top-10 -left-6 glass-panel-dark shadow-xl px-3.5 py-2.5 rounded-xl flex items-center gap-2 border border-white/5 select-none"
-                >
-                  <Briefcase size={16} className="text-brand-teal" />
-                  <span className="text-xs font-bold text-white">Top Pay Rates</span>
-                </motion.div>
-
-                <motion.div
-                  animate={{ y: [0, 8, 0] }}
-                  transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                  className="absolute bottom-10 -right-6 glass-panel-dark shadow-xl px-3.5 py-2.5 rounded-xl flex items-center gap-2 border border-white/5 select-none"
-                >
-                  <Award size={16} className="text-brand-teal" />
-                  <span className="text-xs font-bold text-white">Paid CNA Training</span>
-                </motion.div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 8. FAQ SECTION */}
-      <section id="faq" className="py-20 bg-slate-50/50 border-t border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs uppercase tracking-widest text-brand-teal font-bold mb-3 inline-block">
-              FAQ
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-brand-navy tracking-tight mb-4">
+      {/* 7. FAQ SECTION */}
+      <section id="faq" className="py-24 bg-[#FAFAFA]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl sm:text-5xl font-bold text-brand-navy tracking-tight mb-6">
               Frequently Asked Questions
             </h2>
-            <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
-              Find immediate answers regarding screening reviews, schedules, and care coordinations.
-            </p>
           </div>
-
           <Accordion items={FAQS} />
         </div>
       </section>
 
-      {/* 9. FINAL EMOTIONAL CTA */}
-      <section className="py-24 bg-white relative overflow-hidden border-t border-slate-100">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-brand-sky-medium/25 blur-3xl -z-10"></div>
-        
+      {/* 8. FINAL EMOTIONAL CTA */}
+      <section className="py-32 bg-brand-navy relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-brand-blue/20 blur-3xl -z-10"></div>
+
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h2 className="text-3xl sm:text-5xl font-bold text-brand-navy tracking-tight mb-6">
-            Ready to Find Compassionate Care?
+          <h2 className="text-4xl sm:text-6xl font-bold text-white tracking-tight mb-8">
+            Ready to find peace of mind?
           </h2>
-          <p className="text-slate-500 text-base sm:text-lg leading-relaxed max-w-xl mx-auto mb-10">
-            Let us build a customized Care Blueprint matching clinical needs and personality fits.
+          <p className="text-slate-300 text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto mb-12 font-light">
+            Let us match you with a trusted local caregiver who fits your family's unique needs and personality.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button href="/contact?type=request" variant="primary" size="lg">
-              Request Care
-            </Button>
-            <Button href="/contact?type=apply" variant="outline" size="lg">
-              Become a Caregiver
+          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
+            <Button href="/contact?type=request" variant="primary" size="lg" className="h-14 px-8 text-base">
+              Request Care Today
             </Button>
           </div>
         </div>

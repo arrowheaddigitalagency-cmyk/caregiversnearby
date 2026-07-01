@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Script from "next/script";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Phone, Mail, Clock, ShieldCheck, AlertCircle, CheckCircle2, Send } from "lucide-react";
+import { Phone, Mail, Clock, ShieldCheck, AlertCircle, CheckCircle2, Send, Heart } from "lucide-react";
 import { contactSchema, ContactFormData } from "@/lib/schema";
 import { submitContactForm } from "@/app/actions/contact";
 import Button from "@/components/ui/Button";
@@ -14,6 +15,31 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Define the Turnstile load callback on the window
+    (window as any).onloadTurnstileCallback = () => {
+      if ((window as any).turnstile) {
+        (window as any).turnstile.render("#turnstile-container", {
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY || "1x00000000000000000000AA",
+          theme: "light",
+        });
+      }
+    };
+
+    // If turnstile script is already loaded and window.turnstile is available
+    if ((window as any).turnstile) {
+      try {
+        (window as any).turnstile.render("#turnstile-container", {
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY || "1x00000000000000000000AA",
+          theme: "light",
+        });
+      } catch (e) {
+        // Already rendered or container not ready yet
+      }
+    }
+  }, []);
 
   const {
     register,
@@ -38,17 +64,25 @@ export default function Contact() {
       honeypot: (document.getElementById("honeypot") as HTMLInputElement)?.value || "",
     };
 
+    const turnstileToken = (document.getElementsByName("cf-turnstile-response")[0] as HTMLInputElement)?.value || "";
+
     try {
       // Execute Next.js Server Action
-      const result = await submitContactForm(payload, "client-browser");
+      const result = await submitContactForm(payload, "client-browser", turnstileToken);
       if (result.success) {
         setSuccess(true);
+        setToastMessage("Inquiry submitted successfully!");
         reset();
+        setTimeout(() => setToastMessage(null), 5000);
       } else {
         setSubmitError(result.error || "An error occurred during submission.");
+        setToastMessage(result.error || "Submission failed.");
+        setTimeout(() => setToastMessage(null), 5000);
       }
     } catch (err: any) {
       setSubmitError(err.message || "Something went wrong. Please try again.");
+      setToastMessage(err.message || "Something went wrong.");
+      setTimeout(() => setToastMessage(null), 5000);
     } finally {
       setIsSubmitting(false);
     }
@@ -73,84 +107,76 @@ export default function Contact() {
   ];
 
   return (
-    <div className="relative">
+    <div className="relative bg-[#FAFAFA]">
       <JsonLd type="Breadcrumbs" data={breadcrumbData} />
 
       {/* 1. HEADER */}
-      <section className="relative bg-gradient-to-b from-brand-sky via-brand-sky/20 to-white py-16 sm:py-20 overflow-hidden">
-        <div className="absolute top-0 right-0 w-[450px] h-[450px] bg-brand-sky-medium/35 blur-3xl -z-10 translate-x-1/4 -translate-y-1/4"></div>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-xs uppercase tracking-widest text-brand-blue font-bold mb-3.5 inline-block">
-            Connect With Us
-          </span>
-          <h1 className="text-4xl sm:text-5xl font-bold text-brand-navy tracking-tight mb-6">
-            Begin Your Care Consultation
-          </h1>
-          <p className="text-slate-500 text-base leading-relaxed">
-            Ready to design a custom Care Blueprint? Submit the Resend-powered contact intake form, or call our care coordinators directly.
-          </p>
+      <section className="relative bg-white pt-24 pb-32 overflow-hidden border-b border-slate-100">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-sky/20 blur-3xl -z-10 translate-x-1/4 -translate-y-1/4 rounded-full"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl text-left">
+            <span className="text-sm uppercase tracking-widest text-brand-teal font-bold mb-4 inline-block">
+              Connect With Us
+            </span>
+            <h1 className="text-5xl sm:text-6xl font-bold text-brand-navy tracking-tight mb-8 leading-tight">
+              Let's design your family's <span className="text-brand-blue">Care Blueprint.</span>
+            </h1>
+            <p className="text-slate-500 text-lg sm:text-xl leading-relaxed font-light">
+              Ready to find the perfect caregiver match? Submit your intake request or call our care coordinators directly to get started.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* 2. SPLIT LAYOUT */}
-      <section className="py-20 bg-white">
+      <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-            
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+
             {/* Left Column: Direct Info */}
-            <div className="lg:col-span-5 flex flex-col gap-8 text-left">
-              
-              {/* Caregiver Image with scrubs */}
-              <div className="relative h-72 w-full rounded-3xl overflow-hidden border border-slate-100 shadow-md bg-slate-100">
+            <div className="lg:col-span-5 flex flex-col gap-10 text-left">
+
+              {/* Premium Image */}
+              <div className="relative h-[400px] w-full rounded-[2.5rem] overflow-hidden shadow-2xl bg-slate-100">
                 <Image
-                  src="/images/contact/contact.jpg"
-                  alt="Hiring coordinator smiling warmly in scrubs"
+                  src="/images/contact/contact.png"
+                  alt="Care coordinator talking on the phone with a family"
                   fill
                   className="object-cover"
                 />
               </div>
 
               {/* Direct Info List */}
-              <div className="flex flex-col gap-5">
-                <a href="tel:+14047542651" className="flex items-start gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-100 shadow-sm hover:border-slate-200 transition-colors group">
-                  <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center shadow-sm shrink-0 text-brand-blue">
-                    <Phone className="w-5 h-5 group-hover:scale-105 transition-transform" />
+              <div className="flex flex-col gap-6">
+                <a href="tel:+14047542651" className="flex items-start gap-5 p-6 rounded-[2rem] bg-white border border-slate-100 shadow-premium hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                  <div className="w-14 h-14 rounded-2xl bg-brand-sky flex items-center justify-center shadow-sm shrink-0 text-brand-blue group-hover:scale-110 transition-transform">
+                    <Phone className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-brand-navy text-sm mb-0.5">Call Direct</h3>
-                    <p className="font-semibold text-slate-700 text-sm">+1 404-754-2651</p>
-                    <p className="text-xs text-slate-400 mt-1">Direct support active 24/7.</p>
+                    <h3 className="font-bold text-brand-navy text-lg mb-1">Call Direct</h3>
+                    <p className="text-slate-500 text-base mb-1">+1 404-754-2651</p>
+                    <p className="text-sm text-slate-400 font-light">Direct support active 24/7.</p>
                   </div>
                 </a>
 
-                <a href="mailto:info@caregiversnearby.com" className="flex items-start gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-100 shadow-sm hover:border-slate-200 transition-colors group">
-                  <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center shadow-sm shrink-0 text-brand-blue">
-                    <Mail className="w-5 h-5 group-hover:scale-105 transition-transform" />
+                <a href="mailto:caregiversnearby@gmail.com" className="flex items-start gap-5 p-6 rounded-[2rem] bg-white border border-slate-100 shadow-premium hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                  <div className="w-14 h-14 rounded-2xl bg-brand-sky flex items-center justify-center shadow-sm shrink-0 text-brand-blue group-hover:scale-110 transition-transform">
+                    <Mail className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-brand-navy text-sm mb-0.5">Email Support</h3>
-                    <p className="font-semibold text-slate-700 text-sm">info@caregiversnearby.com</p>
-                    <p className="text-xs text-slate-400 mt-1">General inquiries and caregiver applications.</p>
+                    <h3 className="font-bold text-brand-navy text-lg mb-1">Email Support</h3>
+                    <p className="text-slate-500 text-base mb-1">caregiversnearby@gmail.com</p>
+                    <p className="text-sm text-slate-400 font-light">General inquiries and care coordination.</p>
                   </div>
                 </a>
-
-                <div className="flex items-start gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-100 shadow-sm">
-                  <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center shadow-sm shrink-0 text-brand-blue">
-                    <Clock className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-brand-navy text-sm mb-0.5">Business Hours</h3>
-                    <p className="font-semibold text-slate-700 text-sm">Office: Mon-Fri, 8 AM - 6 PM EST</p>
-                    <p className="text-xs text-slate-400 mt-1">Care coordinators remain on-call 24/7.</p>
-                  </div>
-                </div>
               </div>
 
               {/* Secure intake guarantee */}
-              <div className="p-5 border border-slate-100 rounded-2xl bg-white/50 flex items-center gap-3.5">
-                <ShieldCheck className="text-brand-emerald shrink-0" size={24} />
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  <strong>Secure Intake:</strong> Your information is encrypted and protected. We do not sell or share contact details with third-party networks.
+              <div className="p-6 rounded-[2rem] bg-brand-navy flex items-start gap-4 shadow-xl">
+                <ShieldCheck className="text-brand-teal shrink-0 mt-1" size={28} strokeWidth={1.5} />
+                <p className="text-sm text-white/80 leading-relaxed font-light">
+                  <strong className="text-white font-bold block mb-1">Secure Intake</strong>
+                  Your information is encrypted and protected. We do not sell or share contact details with third-party networks.
                 </p>
               </div>
 
@@ -159,28 +185,31 @@ export default function Contact() {
             {/* Right Column: Form */}
             <div className="lg:col-span-7">
               {success ? (
-                <div className="bg-brand-sky/40 border border-brand-blue/15 rounded-3xl p-8 sm:p-12 text-center shadow-sm animate-fadeIn">
-                  <div className="w-16 h-16 bg-brand-emerald/10 text-brand-emerald rounded-full flex items-center justify-center mx-auto mb-6">
-                    <CheckCircle2 size={36} />
+                <div className="bg-white rounded-[3rem] p-12 text-center shadow-2xl border border-slate-100 animate-fadeIn h-full flex flex-col items-center justify-center min-h-[600px]">
+                  <div className="w-24 h-24 bg-brand-emerald/10 text-brand-emerald rounded-full flex items-center justify-center mx-auto mb-8">
+                    <CheckCircle2 size={48} />
                   </div>
-                  <h3 className="text-2xl font-bold text-brand-navy mb-3">Care Inquiry Received</h3>
-                  <p className="text-slate-500 mb-8 leading-relaxed max-w-sm mx-auto text-sm">
-                    Thank you! Your inquiry was successfully registered in our database and a confirmation email has been dispatched. Our team will contact you shortly.
+                  <h3 className="text-3xl font-bold text-brand-navy mb-4">Care Inquiry Received</h3>
+                  <p className="text-slate-500 mb-10 leading-relaxed max-w-md mx-auto text-lg font-light">
+                    Thank you! Your inquiry was successfully registered. Our care coordinators will reach out shortly to discuss your custom blueprint.
                   </p>
-                  <Button onClick={() => setSuccess(false)} variant="outline">
+                  <Button onClick={() => setSuccess(false)} variant="outline" size="lg">
                     Send Another Inquiry
                   </Button>
                 </div>
               ) : (
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-premium flex flex-col gap-5 text-left"
+                  className="bg-white rounded-[3rem] p-8 sm:p-12 shadow-2xl flex flex-col gap-8 text-left border border-slate-100"
                 >
-                  <h3 className="text-xl font-bold text-brand-navy mb-1.5">Intake Request Form</h3>
+                  <div>
+                    <h3 className="text-3xl font-bold text-brand-navy mb-2">Intake Request</h3>
+                    <p className="text-slate-500 font-light">Please provide the details below so we can best assist you.</p>
+                  </div>
 
                   {submitError && (
-                    <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2">
-                      <AlertCircle size={16} className="shrink-0" />
+                    <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl text-sm font-semibold flex items-center gap-3">
+                      <AlertCircle size={20} className="shrink-0" />
                       <span>{submitError}</span>
                     </div>
                   )}
@@ -191,106 +220,98 @@ export default function Contact() {
                     <input id="honeypot" name="honeypot" type="text" tabIndex={-1} autoComplete="off" />
                   </div>
 
-                  {/* First Name & Last Name Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="firstName" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="firstName" className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                         First Name *
                       </label>
                       <input
                         id="firstName"
                         type="text"
                         placeholder="Jane"
-                        className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue ${
-                          errors.firstName ? "border-red-300 bg-red-50/10" : "border-slate-200"
-                        }`}
+                        className={`w-full px-5 py-4 rounded-2xl border text-base transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue ${errors.firstName ? "border-red-300 bg-red-50" : "border-slate-200 bg-[#FAFAFA]"
+                          }`}
                         {...register("firstName")}
                       />
                       {errors.firstName && (
-                        <span className="text-xs text-red-500 flex items-center gap-1.5 mt-0.5">
-                          <AlertCircle size={12} />
+                        <span className="text-xs text-red-500 flex items-center gap-1.5 mt-1">
+                          <AlertCircle size={14} />
                           {errors.firstName.message}
                         </span>
                       )}
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="lastName" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="lastName" className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                         Last Name *
                       </label>
                       <input
                         id="lastName"
                         type="text"
                         placeholder="Doe"
-                        className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue ${
-                          errors.lastName ? "border-red-300 bg-red-50/10" : "border-slate-200"
-                        }`}
+                        className={`w-full px-5 py-4 rounded-2xl border text-base transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue ${errors.lastName ? "border-red-300 bg-red-50" : "border-slate-200 bg-[#FAFAFA]"
+                          }`}
                         {...register("lastName")}
                       />
                       {errors.lastName && (
-                        <span className="text-xs text-red-500 flex items-center gap-1.5 mt-0.5">
-                          <AlertCircle size={12} />
+                        <span className="text-xs text-red-500 flex items-center gap-1.5 mt-1">
+                          <AlertCircle size={14} />
                           {errors.lastName.message}
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Email & Phone Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="email" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="email" className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                         Email Address *
                       </label>
                       <input
                         id="email"
                         type="email"
                         placeholder="jane@example.com"
-                        className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue ${
-                          errors.email ? "border-red-300 bg-red-50/10" : "border-slate-200"
-                        }`}
+                        className={`w-full px-5 py-4 rounded-2xl border text-base transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue ${errors.email ? "border-red-300 bg-red-50" : "border-slate-200 bg-[#FAFAFA]"
+                          }`}
                         {...register("email")}
                       />
                       {errors.email && (
-                        <span className="text-xs text-red-500 flex items-center gap-1.5 mt-0.5">
-                          <AlertCircle size={12} />
+                        <span className="text-xs text-red-500 flex items-center gap-1.5 mt-1">
+                          <AlertCircle size={14} />
                           {errors.email.message}
                         </span>
                       )}
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                      <label htmlFor="phone" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="phone" className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                         Phone Number *
                       </label>
                       <input
                         id="phone"
                         type="tel"
                         placeholder="(555) 000-0000"
-                        className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue ${
-                          errors.phone ? "border-red-300 bg-red-50/10" : "border-slate-200"
-                        }`}
+                        className={`w-full px-5 py-4 rounded-2xl border text-base transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue ${errors.phone ? "border-red-300 bg-red-50" : "border-slate-200 bg-[#FAFAFA]"
+                          }`}
                         {...register("phone")}
                       />
                       {errors.phone && (
-                        <span className="text-xs text-red-500 flex items-center gap-1.5 mt-0.5">
-                          <AlertCircle size={12} />
+                        <span className="text-xs text-red-500 flex items-center gap-1.5 mt-1">
+                          <AlertCircle size={14} />
                           {errors.phone.message}
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Service Needed Dropdown */}
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="serviceNeeded" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="serviceNeeded" className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                       Service Needed *
                     </label>
                     <select
                       id="serviceNeeded"
-                      className={`w-full px-4 py-3 rounded-xl border text-sm bg-white transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue ${
-                        errors.serviceNeeded ? "border-red-300 bg-red-50/10" : "border-slate-200"
-                      }`}
+                      className={`w-full px-5 py-4 rounded-2xl border text-base transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue ${errors.serviceNeeded ? "border-red-300 bg-red-50" : "border-slate-200 bg-[#FAFAFA]"
+                        }`}
                       {...register("serviceNeeded")}
                     >
                       <option value="">-- Select Service Needed --</option>
@@ -301,45 +322,42 @@ export default function Contact() {
                       ))}
                     </select>
                     {errors.serviceNeeded && (
-                      <span className="text-xs text-red-500 flex items-center gap-1.5 mt-0.5">
-                        <AlertCircle size={12} />
+                      <span className="text-xs text-red-500 flex items-center gap-1.5 mt-1">
+                        <AlertCircle size={14} />
                         {errors.serviceNeeded.message}
                       </span>
                     )}
                   </div>
 
-                  {/* Message */}
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="message" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="message" className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                       Message / Care Details *
                     </label>
                     <textarea
                       id="message"
-                      rows={4}
-                      placeholder="Please details any physical assistance requirements, schedule preferences, or cognitive goals..."
-                      className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue resize-none ${
-                        errors.message ? "border-red-300 bg-red-50/10" : "border-slate-200"
-                      }`}
+                      rows={5}
+                      placeholder="Please share any requirements or preferences..."
+                      className={`w-full px-5 py-4 rounded-2xl border text-base transition-all focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue resize-none ${errors.message ? "border-red-300 bg-red-50" : "border-slate-200 bg-[#FAFAFA]"
+                        }`}
                       {...register("message")}
                     />
                     {errors.message && (
-                      <span className="text-xs text-red-500 flex items-center gap-1.5 mt-0.5">
-                        <AlertCircle size={12} />
+                      <span className="text-xs text-red-500 flex items-center gap-1.5 mt-1">
+                        <AlertCircle size={14} />
                         {errors.message.message}
                       </span>
                     )}
                   </div>
 
-                  {/* Preferred Contact Method */}
-                  <div className="flex flex-col gap-2">
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Preferred Contact Method</span>
-                    <div className="flex gap-6 mt-1.5">
+                  <div className="flex flex-col gap-3">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Preferred Contact Method</span>
+                    <div className="flex gap-8">
                       {["email", "phone", "text"].map((method) => (
-                        <label key={method} className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer capitalize">
+                        <label key={method} className="flex items-center gap-2.5 text-base text-slate-600 cursor-pointer capitalize">
                           <input
                             type="radio"
                             value={method}
-                            className="w-4 h-4 text-brand-blue border-slate-300 focus:ring-brand-blue cursor-pointer"
+                            className="w-5 h-5 text-brand-blue border-slate-300 focus:ring-brand-blue cursor-pointer"
                             {...register("preferredContact")}
                           />
                           <span>{method}</span>
@@ -347,40 +365,43 @@ export default function Contact() {
                       ))}
                     </div>
                     {errors.preferredContact && (
-                      <span className="text-xs text-red-500 flex items-center gap-1.5 mt-0.5">
-                        <AlertCircle size={12} />
+                      <span className="text-xs text-red-500 flex items-center gap-1.5 mt-1">
+                        <AlertCircle size={14} />
                         {errors.preferredContact.message}
                       </span>
                     )}
                   </div>
 
-                  {/* Agreement Checkbox */}
-                  <div className="flex flex-col gap-1">
-                    <label className="flex items-start gap-2.5 mt-3 cursor-pointer">
+                  <div className="flex flex-col gap-2">
+                    <label className="flex items-start gap-3 mt-4 cursor-pointer">
                       <input
                         type="checkbox"
-                        className="w-4 h-4 text-brand-blue border-slate-300 rounded focus:ring-brand-blue cursor-pointer mt-0.5"
+                        className="w-5 h-5 text-brand-blue border-slate-300 rounded focus:ring-brand-blue cursor-pointer mt-1"
                         {...register("agreeToContact")}
                       />
-                      <span className="text-xs text-slate-500 leading-normal select-none">
-                        I agree to be contacted by Caregivers Nearby coordinates regarding home care blue-print inquiries.
+                      <span className="text-sm text-slate-500 leading-relaxed font-light">
+                        I agree to be contacted by Caregivers Nearby coordinators regarding home care blueprint inquiries.
                       </span>
                     </label>
                     {errors.agreeToContact && (
-                      <span className="text-xs text-red-500 flex items-center gap-1.5 mt-1.5">
-                        <AlertCircle size={12} />
+                      <span className="text-xs text-red-500 flex items-center gap-1.5 mt-1">
+                        <AlertCircle size={14} />
                         {errors.agreeToContact.message}
                       </span>
                     )}
                   </div>
 
-                  {/* Submit Button */}
+                  {/* Cloudflare Turnstile Spam Check */}
+                  <div className="flex justify-center my-2">
+                    <div id="turnstile-container"></div>
+                  </div>
+
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    icon={isSubmitting ? undefined : <Send size={15} />}
+                    icon={isSubmitting ? undefined : <Send size={18} />}
                     variant="primary"
-                    className="mt-4"
+                    className="mt-6 h-14 text-lg shadow-xl shadow-brand-blue/20 rounded-2xl"
                     fullWidth
                   >
                     {isSubmitting ? "Submitting Inquiry..." : "Submit Inquiry"}
@@ -392,6 +413,34 @@ export default function Contact() {
           </div>
         </div>
       </section>
+      <Script id="turnstile-callback">
+        {`
+          window.onloadTurnstileCallback = function() {
+            if (window.turnstile) {
+              try {
+                window.turnstile.render('#turnstile-container', {
+                  sitekey: '${process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY || "1x00000000000000000000AA"}',
+                  theme: 'light'
+                });
+              } catch (e) {
+                console.error("Turnstile render error:", e);
+              }
+            }
+          };
+        `}
+      </Script>
+      <Script 
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback&render=explicit" 
+        strategy="afterInteractive" 
+      />
+
+      {/* Success Toast */}
+      {toastMessage && (
+        <div className="fixed bottom-8 right-8 bg-[#0B2D52] text-white px-6 py-4 rounded-2xl shadow-2xl border border-[#E5EEF5]/20 flex items-center gap-3 z-50 transition-all duration-300">
+          <CheckCircle2 className="text-[#0DB7C8] w-6 h-6 shrink-0" />
+          <span className="font-semibold text-sm">{toastMessage}</span>
+        </div>
+      )}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Heart, Menu, X, PhoneCall } from "lucide-react";
 import Button from "@/components/ui/Button";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -97,18 +98,23 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-20">
           
           {/* Logo SVG */}
-          <Link href="/" className="flex items-center gap-2.5 group rounded-lg p-1 cursor-pointer">
-            <div className="w-10 h-10 rounded-xl bg-brand-blue/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-sm">
-              <Heart className="w-5.5 h-5.5 text-brand-blue fill-brand-blue/10" />
-            </div>
-            <div className="flex flex-col text-left">
-              <span className="text-lg font-bold tracking-tight text-brand-navy group-hover:text-brand-blue transition-colors duration-300">
-                Caregivers Nearby
-              </span>
-              <span className="text-[10px] uppercase tracking-widest text-slate-500 font-semibold -mt-1">
-                Trusted Network
-              </span>
-            </div>
+          <Link href="/" className="flex items-center group rounded-lg cursor-pointer">
+            <Image
+              src="/logo/logo.svg"
+              alt="Caregivers Nearby"
+              width={180}
+              height={42}
+              className="hidden md:block w-auto h-[42px] group-hover:opacity-90 transition-opacity"
+              priority
+            />
+            <Image
+              src="/logo/logo.svg"
+              alt="Caregivers Nearby"
+              width={145}
+              height={34}
+              className="block md:hidden w-auto h-[34px] group-hover:opacity-90 transition-opacity"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -140,13 +146,6 @@ export default function Navbar() {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            <Button
-              href="/contact?subject=caregiver"
-              variant="outline"
-              size="sm"
-            >
-              Join as Caregiver
-            </Button>
             <Button
               href="/contact?type=request"
               variant="primary"
@@ -196,14 +195,6 @@ export default function Navbar() {
             })}
           </nav>
           <div className="border-t border-slate-100 pt-4 flex flex-col gap-3">
-            <Button
-              href="/contact?subject=caregiver"
-              onClick={() => setIsOpen(false)}
-              variant="outline"
-              fullWidth
-            >
-              Join as Caregiver
-            </Button>
             <Button
               href="/contact?type=request"
               onClick={() => setIsOpen(false)}

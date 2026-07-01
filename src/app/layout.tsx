@@ -63,9 +63,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${plusJakartaSans.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-white text-brand-navy">
+      <body suppressHydrationWarning className="min-h-full flex flex-col font-sans bg-white text-brand-navy">
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />

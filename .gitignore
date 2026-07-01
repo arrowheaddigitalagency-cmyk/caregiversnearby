@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local database & design files
+src/lib/db.json
+Untitled design.png
+

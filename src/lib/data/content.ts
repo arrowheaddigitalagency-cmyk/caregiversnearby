@@ -2,9 +2,9 @@ export const SITE_INFO = {
   name: "Caregivers Nearby",
   tagline: "Compassionate Care. Trusted Caregivers. Right Nearby.",
   phone: "(800) 555-0199",
-  email: "care@caregiversnearby.com",
+  email: "caregiversnearby@gmail.com",
   hours: "24/7 Care Support | Office Hours: Mon-Fri, 8 AM - 6 PM EST",
-  address: "100 Medical Center Parkway, Suite 500, Boston, MA 02111",
+  address: "1141 Hawthorne Circle, Madison, GA, 30650, USA",
   emergencyNotice: "Emergency Notice: If this is a medical emergency, please call 911 immediately. Caregivers Nearby provides non-medical home care services, companion care, and daily living support.",
 };
 
@@ -293,37 +293,44 @@ export const FAQS = [
 ];
 
 export const ABOUT_CONTENT = {
-  story: "Caregivers Nearby was founded out of a personal struggle. When our own grandfather needed support after a stroke, we spent weeks searching for someone trustworthy, certified, and compassionate who lived nearby. We found that the existing agencies felt cold and transactional, while independent listings lacked vetting and safety. We knew there had to be a better way. We built Caregivers Nearby to combine modern technology with local human care—creating an organization that treats your family exactly like our own.",
-  mission: "To elevate the standard of home-based care by connecting families with the most compassionate, rigorously vetted caregivers in their local communities, enabling seniors to age safely and comfortably in their own homes.",
-  vision: "To become America's most trusted and reliable local care network, fostering deep human connections, supporting caregiver careers, and transforming how society views and receives elder care.",
+  story: "At Caregivers Nearby, our mission is simple: to help seniors live safely, comfortably, and independently in the place they call home. We proudly connect families with compassionate, dependable caregivers who provide high-quality, non-medical in-home companion care throughout Morgan, Greene, Putnam, Bibb, Hancock, Oconee, Clarke, and Baldwin counties in Georgia. We understand that finding someone to care for a loved one is one of the most important decisions a family can make. That’s why we’re committed to matching every client with a caregiver who is not only experienced and reliable but also genuinely passionate about serving others. Whether your loved one needs companionship, assistance with daily activities, transportation to appointments, meal preparation, medication reminders, light housekeeping, or respite care for family caregivers, our goal is to provide personalized support that enhances independence and improves quality of life.",
+  mission: "To provide compassionate, dependable, and affordable non-medical home care that allows seniors to age with dignity while giving families confidence and peace of mind.",
+  vision: "We are building more than a caregiving service—we are creating a trusted caregiver network that strengthens communities, supports families, and empowers seniors to remain active and independent. Beginning in Central Georgia, our vision is to expand Caregivers Nearby into one of the nation’s most trusted networks for compassionate in-home companion care.",
   values: [
     {
-      title: "Uncompromising Safety",
-      description: "We maintain double-checked screenings and background reviews because your family's safety is our sacred trust."
+      title: "Screened Caregivers",
+      description: "Compassionate, carefully screened caregivers who are genuinely passionate about serving others."
     },
     {
-      title: "Empathetic Connection",
-      description: "We believe care is clinical but, above all, emotional. We listen, support, and care with real heart."
+      title: "Personalized Care",
+      description: "Personalized care tailored to each client's unique needs, enhancing independence and quality of life."
     },
     {
-      title: "Caregiver Dignity",
-      description: "Outstanding care begins with outstanding caregivers. We support our staff with fair wages, training, and respect."
+      title: "Flexible Scheduling",
+      description: "From a few hours a week to ongoing support, we adapt to your family's schedule."
     },
     {
-      title: "Radical Transparency",
-      description: "No hidden fees, no long contracts, and immediate, open communication lines between care coordinators, caregivers, and families."
+      title: "Local Caregivers",
+      description: "Local professionals who understand and live in the communities they serve throughout Georgia."
+    },
+    {
+      title: "Responsive Communication",
+      description: "Responsive and open communication with families every step of the way for peace of mind."
+    },
+    {
+      title: "Kindness & Respect",
+      description: "A deep commitment to treating every client with dignity, kindness, and respect."
     }
   ],
   stats: [
-    { value: "10,000+", label: "Happy Families Served" },
-    { value: "98%", label: "Caregiver Match Success" },
-    { value: "100%", label: "Background Checked Caregivers" },
-    { value: "500,000+", label: "Hours of Care Provided" }
+    { value: "8", label: "Georgia Counties" },
+    { value: "100%", label: "Screened & Vetted" },
+    { value: "24/7", label: "Care Support" },
+    { value: "Family", label: "Focused Network" }
   ],
   timeline: [
-    { year: "2020", title: "Founding Promise", description: "Launched our first local care network in Boston with 15 dedicated caregivers." },
-    { year: "2022", title: "Regional Expansion", description: "Expanded services throughout Massachusetts and New England, serving over 1,500 families." },
-    { year: "2024", title: "Advanced Training Academy", description: "Launched our proprietary training academy to equip caregivers with specialized Alzheimer's and Dementia support skills." },
-    { year: "2026", title: "Nationwide Vision", description: "Expanding our digital matching platform and caregiver hubs to bring trusted local care to communities across America." }
+    { year: "Goal", title: "Active & Independent Seniors", description: "Helping seniors remain active and independent in their own homes." },
+    { year: "Serving", title: "Central & East Georgia", description: "Providing dedicated in-home companion care to local communities." },
+    { year: "Growth", title: "Expanding Trust", description: "Expanding Caregivers Nearby into one of the nation's most trusted companion care networks." }
   ]
 };
