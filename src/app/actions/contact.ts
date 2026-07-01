@@ -121,7 +121,11 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
 
     if (apiKey) {
       const resend = new Resend(apiKey);
-        from: `Caregivers Nearby <${fromEmail}>`,
+
+      try {
+        // B. Visitor confirmation email
+        await resend.emails.send({
+          from: `Caregivers Nearby <${fromEmail}>`,
         to: data.email,
         subject: "We've Received Your Request",
         html: `
@@ -150,6 +154,7 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
             </div>
           </div>
         `,
+        });
       } catch (resendError) {
         // Log the error but do not fail the request since Web3Forms successfully notified the admin
         console.error("Resend auto-response email to visitor failed:", resendError);
