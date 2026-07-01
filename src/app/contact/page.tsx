@@ -42,6 +42,12 @@ export default function Contact() {
     try {
       // 1. Client-Side Web3Forms Submission (Main Admin Email)
       // Web3Forms blocks server-side requests to prevent spam, so it MUST run in the browser.
+      const formattedService = data.serviceNeeded
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+      const formattedPreferredContact = data.preferredContact
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+
       const web3Response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
@@ -52,14 +58,13 @@ export default function Contact() {
           access_key: "09897199-a6c3-4b13-9e30-d20c6c861b9b",
           subject: "New Contact Form Submission - Caregivers Nearby",
           from_name: "Caregivers Nearby Website",
-          name: `${data.firstName} ${data.lastName}`,
-          email: data.email, // This allows Web3Forms to send an auto-response to the user if enabled
-          phone: data.phone,
-          service_needed: data.serviceNeeded,
-          preferred_contact: data.preferredContact,
-          message: data.message,
-          timestamp: new Date().toLocaleString(),
-          logo: "https://www.caregiversnearby.com/logo/logo.svg"
+          "Visitor Name": `${data.firstName} ${data.lastName}`,
+          "Email Address": data.email,
+          "Phone Number": data.phone,
+          "Service Needed": formattedService,
+          "Preferred Contact Method": formattedPreferredContact,
+          "Care Details / Message": data.message,
+          "Submission Time": new Date().toLocaleString(),
         }),
       });
 
