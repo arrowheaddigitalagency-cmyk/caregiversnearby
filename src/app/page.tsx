@@ -135,7 +135,7 @@ export default function Home() {
             src="/images/hero/hero-trust.png"
             alt="Professional caregiver helping an elderly woman walk"
             fill
-            className="object-cover object-right lg:object-center"
+            className="object-cover object-right lg:object-[center_80%]"
             priority
           />
           {/* Desktop Left-to-Right Fade */}
@@ -222,7 +222,7 @@ export default function Home() {
             </div>
 
             {/* Right Column: Floating Badges (overlaying background image, desktop only to prevent clutter on mobile) */}
-            <div className="hidden lg:flex lg:col-span-5 relative h-[550px] w-full justify-center items-center">
+            <div className="hidden lg:flex lg:col-span-5 relative h-[550px] w-full justify-center items-center lg:self-start lg:mt-12">
               
               {/* Trust Badges - translateY + opacity animations */}
               <motion.div
