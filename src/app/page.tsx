@@ -140,8 +140,8 @@ export default function Home() {
           />
           {/* Desktop Left-to-Right Fade */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#FAFAFA] via-[#FAFAFA]/95 to-transparent z-10 hidden lg:block w-full"></div>
-          {/* Mobile Top-to-Bottom Fade */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#FAFAFA] via-[#FAFAFA]/90 to-[#FAFAFA]/40 z-10 lg:hidden block"></div>
+          {/* Mobile Top-to-Bottom Fade - Higher opacity to ensure text is 100% readable on mobile */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FAFAFA] via-[#FAFAFA]/95 to-[#FAFAFA]/85 z-10 lg:hidden block"></div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
@@ -161,12 +161,12 @@ export default function Home() {
                 <span>Premium In-Home Care Network</span>
               </motion.div>
 
-              {/* Large Emotional Headline */}
+              {/* Large Emotional Headline - Reduced to text-4xl on mobile to prevent ugly wrapping */}
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-5xl sm:text-6xl lg:text-7xl font-bold text-brand-navy tracking-tight leading-[1.05] mb-6"
+                className="text-4xl sm:text-6xl lg:text-7xl font-bold text-brand-navy tracking-tight leading-[1.1] mb-6"
               >
                 Compassionate Care.<br />
                 <span className="text-brand-blue bg-gradient-to-r from-brand-blue to-brand-teal bg-clip-text text-transparent">Trusted Professionals.</span><br />
@@ -178,7 +178,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-lg sm:text-xl leading-relaxed text-slate-600 max-w-xl mb-8 font-light"
+                className="text-base sm:text-xl leading-relaxed text-slate-600 max-w-xl mb-8 font-light"
               >
                 We connect families with certified, empathetic local caregivers. Experience custom home care blueprints designed for safety, comfort, and real human connection.
               </motion.p>
@@ -198,31 +198,31 @@ export default function Home() {
                 </Button>
               </motion.div>
 
-              {/* Below CTA: Trust Metrics */}
+              {/* Below CTA: Trust Metrics - Uses grid + divide-x to prevent awkward wrapping on mobile */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="flex flex-wrap gap-x-8 gap-y-4 border-t border-slate-100 pt-6 w-full max-w-xl"
+                className="grid grid-cols-3 gap-1 sm:gap-6 border-t border-slate-100 pt-6 w-full max-w-xl divide-x divide-slate-200"
               >
-                <div>
-                  <p className="text-2xl font-bold text-brand-navy">100%</p>
-                  <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Vetted Caregivers</p>
+                <div className="pr-1 sm:pr-4">
+                  <p className="text-xl sm:text-2xl font-bold text-brand-navy">100%</p>
+                  <p className="text-[10px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider leading-tight">Vetted Caregivers</p>
                 </div>
-                <div className="border-l border-slate-200 pl-8">
-                  <p className="text-2xl font-bold text-brand-navy">24/7</p>
-                  <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">On-Call Support</p>
+                <div className="pl-2 sm:pl-6 pr-1 sm:pr-4">
+                  <p className="text-xl sm:text-2xl font-bold text-brand-navy">24/7</p>
+                  <p className="text-[10px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider leading-tight">On-Call Support</p>
                 </div>
-                <div className="border-l border-slate-200 pl-8">
-                  <p className="text-2xl font-bold text-brand-navy">Local</p>
-                  <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Community Experts</p>
+                <div className="pl-2 sm:pl-6">
+                  <p className="text-xl sm:text-2xl font-bold text-brand-navy">Local</p>
+                  <p className="text-[10px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider leading-tight">Community Experts</p>
                 </div>
               </motion.div>
 
             </div>
 
-            {/* Right Column: Floating Badges (overlaying background image) */}
-            <div className="lg:col-span-5 relative h-[300px] lg:h-[550px] w-full flex justify-center items-center">
+            {/* Right Column: Floating Badges (overlaying background image, desktop only to prevent clutter on mobile) */}
+            <div className="hidden lg:flex lg:col-span-5 relative h-[550px] w-full justify-center items-center">
               
               {/* Trust Badges - translateY + opacity animations */}
               <motion.div
