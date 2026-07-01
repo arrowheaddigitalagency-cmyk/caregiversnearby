@@ -58,19 +58,72 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
 
     if (apiKey) {
       const resend = new Resend(apiKey);
+      const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || "caregiversnearby@gmail.com";
 
+      // A. Admin notification email
       try {
-        // B. Visitor confirmation email
+        await resend.emails.send({
+          from: `Caregivers Nearby Portal <${fromEmail}>`,
+          to: receiverEmail,
+          subject: "New Contact Form Submission - Caregivers Nearby",
+          html: `
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #E5EEF5; border-radius: 20px; background-color: #FFFFFF; text-align: left;">
+              <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #E5EEF5; padding-bottom: 25px;">
+                <img src="https://www.caregiversnearby.com/logo/logo.png" alt="Caregivers Nearby Logo" style="max-height: 50px; width: auto; margin-bottom: 15px;" />
+                <h2 style="color: #0B2D52; margin: 0; font-size: 22px; font-weight: bold; letter-spacing: -0.5px;">New Contact Form Submission</h2>
+                <p style="color: #0DB7C8; margin: 5px 0 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; tracking-wider;">Caregivers Nearby Portal</p>
+              </div>
+              <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                <tr>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600; width: 40%;">Name</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;">${data.firstName} ${data.lastName}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Email Address</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;"><a href="mailto:${data.email}" style="color: #0DB7C8; text-decoration: none;">${data.email}</a></td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Phone Number</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;"><a href="tel:${data.phone}" style="color: #0DB7C8; text-decoration: none;">${data.phone}</a></td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Service Needed</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52; text-transform: capitalize;">${data.serviceNeeded.replace(/-/g, " ")}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Preferred Contact Method</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52; text-transform: capitalize;">${data.preferredContact}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Submission Time</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;">${new Date().toLocaleString()}</td>
+                </tr>
+              </table>
+              <div style="margin-bottom: 20px;">
+                <h4 style="color: #0B2D52; margin: 0 0 10px 0; font-size: 16px; font-weight: bold;">Message / Care Details</h4>
+                <div style="background-color: #F8FBFD; border-left: 4px solid #0DB7C8; padding: 15px; border-radius: 4px; color: #0B2D52; line-height: 1.6; font-size: 15px;">
+                  ${data.message.replace(/\n/g, "<br/>")}
+                </div>
+              </div>
+            </div>
+          `,
+        });
+      } catch (adminError) {
+        console.error("Resend admin notification email failed:", adminError);
+      }
+
+      // B. Visitor confirmation email
+      try {
         await resend.emails.send({
           from: `Caregivers Nearby <${fromEmail}>`,
-        to: data.email,
-        subject: "We've Received Your Request",
-        html: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 35px; border: 1px solid #E5EEF5; border-radius: 24px; background-color: #FFFFFF; text-align: left;">
-            <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #E5EEF5; padding-bottom: 25px;">
-              <h2 style="color: #0B2D52; margin: 0; font-size: 24px; font-weight: bold; letter-spacing: -0.5px;">Caregivers Nearby</h2>
-              <p style="color: #0DB7C8; margin: 5px 0 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; tracking-wider;">Compassionate Care. Trusted Caregivers. Right Nearby.</p>
-            </div>
+          to: data.email,
+          subject: "We've Received Your Request",
+          html: `
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 35px; border: 1px solid #E5EEF5; border-radius: 24px; background-color: #FFFFFF; text-align: left;">
+              <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #E5EEF5; padding-bottom: 25px;">
+                <img src="https://www.caregiversnearby.com/logo/logo.png" alt="Caregivers Nearby Logo" style="max-height: 50px; width: auto; margin-bottom: 15px;" />
+                <p style="color: #0DB7C8; margin: 5px 0 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; tracking-wider;">Compassionate Care. Trusted Caregivers. Right Nearby.</p>
+              </div>
             
             <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Hi ${data.firstName},</p>
             
