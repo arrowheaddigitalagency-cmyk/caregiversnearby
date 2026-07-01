@@ -2,8 +2,7 @@
 
 import { Resend } from "resend";
 import { contactSchema, ContactFormData } from "@/lib/schema";
-import fs from "fs";
-import path from "path";
+
 
 // Simple in-memory rate limiter (stores timestamp by client identifiers/IPs)
 const rateLimitCache = new Map<string, number>();
@@ -50,33 +49,6 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
 
     // 4. Update Rate Limit Cache
     rateLimitCache.set(clientIp, now);
-
-    // 5. Mock DB Persistence: Append record to local JSON file
-    const dbDir = path.join(process.cwd(), "src/lib");
-    const dbPath = path.join(dbDir, "db.json");
-    
-    if (!fs.existsSync(dbDir)) {
-      fs.mkdirSync(dbDir, { recursive: true });
-    }
-
-    let database: any[] = [];
-    if (fs.existsSync(dbPath)) {
-      try {
-        const fileContent = fs.readFileSync(dbPath, "utf-8");
-        database = JSON.parse(fileContent);
-      } catch (err) {
-        console.error("Failed to parse db.json, resetting:", err);
-      }
-    }
-    
-    database.push({
-      ...data,
-      id: `enquiry_${Date.now()}`,
-      clientIp,
-      timestamp: new Date().toISOString(),
-    });
-    
-    fs.writeFileSync(dbPath, JSON.stringify(database, null, 2));
 
     // 6. Web3Forms API Integration (Main Email Receiver for Admin)
     const web3formsAccessKey = "09897199-a6c3-4b13-9e30-d20c6c861b9b";
