@@ -50,7 +50,7 @@ export default function Navbar() {
     { name: "Services", href: "/#services", isAnchor: true, anchorId: "services" },
     { name: "Why Choose Us", href: "/#why-us", isAnchor: true, anchorId: "why-us" },
     { name: "About Us", href: "/about", isAnchor: false },
-    { name: "Contact Us", href: "/contact", isAnchor: false },
+    { name: "Request Care", href: "/contact", isAnchor: false },
   ];
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, link: typeof navLinks[0]) => {
