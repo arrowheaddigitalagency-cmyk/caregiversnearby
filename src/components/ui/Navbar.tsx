@@ -50,8 +50,7 @@ export default function Navbar() {
     { name: "Services", href: "/#services", isAnchor: true, anchorId: "services" },
     { name: "Why Choose Us", href: "/#why-us", isAnchor: true, anchorId: "why-us" },
     { name: "About Us", href: "/about", isAnchor: false },
-    { name: "Join Us", href: "/join-us", isAnchor: false },
-    { name: "Contact", href: "/contact", isAnchor: false },
+    { name: "Contact Us", href: "/contact", isAnchor: false },
   ];
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, link: typeof navLinks[0]) => {
@@ -148,11 +147,11 @@ export default function Navbar() {
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-4">
             <Button
-              href="/contact?type=request"
+              href="/join-us"
               variant="primary"
               size="sm"
             >
-              Request Care
+              Join as Caregiver
             </Button>
           </div>
 
@@ -197,12 +196,12 @@ export default function Navbar() {
           </nav>
           <div className="border-t border-slate-100 pt-4 flex flex-col gap-3">
             <Button
-              href="/contact?type=request"
+              href="/join-us"
               onClick={() => setIsOpen(false)}
               variant="primary"
               fullWidth
             >
-              Request Care
+              Join as Caregiver
             </Button>
           </div>
         </div>
