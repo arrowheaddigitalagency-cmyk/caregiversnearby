@@ -34,7 +34,7 @@ export default function Footer() {
           <div className="md:col-span-5 flex flex-col gap-6">
             <Link href="/" className="flex items-center group w-fit">
               <Image
-                src="/logo/logo.png"
+                src="/logo/logo.svg"
                 alt="Caregivers Nearby"
                 width={180}
                 height={42}
@@ -43,7 +43,7 @@ export default function Footer() {
                 unoptimized
               />
               <Image
-                src="/logo/logo.png"
+                src="/logo/logo.svg"
                 alt="Caregivers Nearby"
                 width={145}
                 height={34}
