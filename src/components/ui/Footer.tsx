@@ -40,6 +40,7 @@ export default function Footer() {
                 height={42}
                 className="hidden md:block w-auto h-[42px] group-hover:opacity-90 transition-opacity"
                 priority
+                unoptimized
               />
               <Image
                 src="/logo/logo.svg"
@@ -48,6 +49,7 @@ export default function Footer() {
                 height={34}
                 className="block md:hidden w-auto h-[34px] group-hover:opacity-90 transition-opacity"
                 priority
+                unoptimized
               />
             </Link>
             <p className="text-sm leading-relaxed text-slate-500 max-w-sm font-light">
