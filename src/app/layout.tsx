@@ -49,6 +49,13 @@ export const metadata: Metadata = {
     description: "Premium local caregiver network. Compassionate home care matching services for seniors and families.",
     creator: "@caregiversnearby",
   },
+  icons: {
+    icon: [
+      { url: "/logo/fav-icon.svg", type: "image/svg+xml" },
+      { url: "/logo/fav-icon.png", type: "image/png" }
+    ],
+    apple: "/logo/fav-icon.png",
+  },
   robots: {
     index: true,
     follow: true,
