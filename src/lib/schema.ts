@@ -29,6 +29,7 @@ export const caregiverSchema = z.object({
   phone: z.string().min(10, { message: "Phone number must be at least 10 digits." }),
   experience: z.string().min(1, { message: "Please select your years of experience." }),
   availability: z.string().min(1, { message: "Please select your general availability." }),
+  state: z.string().min(1, { message: "Please select your state." }),
   aboutMe: z.string().min(20, { message: "Please write at least 20 characters about your experience and background." }),
 });
 

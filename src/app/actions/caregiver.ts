@@ -33,6 +33,7 @@ export async function submitCaregiverForm(formData: any, clientIp: string = "unk
       phone: formData.phone,
       experience: formData.experience,
       availability: formData.availability,
+      state: formData.state,
       aboutMe: formData.aboutMe,
     });
 
@@ -78,6 +79,10 @@ export async function submitCaregiverForm(formData: any, clientIp: string = "unk
                 <tr>
                   <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Phone Number</td>
                   <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;"><a href="tel:${data.phone}" style="color: #0DB7C8; text-decoration: none;">${data.phone}</a></td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">State</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52; text-transform: uppercase;">${data.state}</td>
                 </tr>
                 <tr>
                   <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Years of Experience</td>
