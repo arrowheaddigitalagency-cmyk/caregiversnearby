@@ -102,17 +102,17 @@ export default function Navbar() {
             <Image
               src="/logo/logo.png"
               alt="Caregivers Nearby"
-              width={180}
-              height={42}
-              className="hidden md:block w-auto h-[42px] group-hover:opacity-90 transition-opacity"
+              width={220}
+              height={56}
+              className="hidden md:block w-auto h-[56px] group-hover:opacity-90 transition-opacity"
               priority
             />
             <Image
               src="/logo/logo.png"
               alt="Caregivers Nearby"
-              width={145}
-              height={34}
-              className="block md:hidden w-auto h-[34px] group-hover:opacity-90 transition-opacity"
+              width={175}
+              height={44}
+              className="block md:hidden w-auto h-[44px] group-hover:opacity-90 transition-opacity"
               priority
             />
           </Link>
