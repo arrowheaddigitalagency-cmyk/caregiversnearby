@@ -34,22 +34,20 @@ export default function Footer() {
           <div className="md:col-span-5 flex flex-col gap-6">
             <Link href="/" className="flex items-center group w-fit">
               <Image
-                src="/logo/logo.svg"
+                src="/logo/logo.png"
                 alt="Caregivers Nearby"
                 width={180}
                 height={42}
                 className="hidden md:block w-auto h-[42px] group-hover:opacity-90 transition-opacity"
                 priority
-                unoptimized
               />
               <Image
-                src="/logo/logo.svg"
+                src="/logo/logo.png"
                 alt="Caregivers Nearby"
                 width={145}
                 height={34}
                 className="block md:hidden w-auto h-[34px] group-hover:opacity-90 transition-opacity"
                 priority
-                unoptimized
               />
             </Link>
             <p className="text-sm leading-relaxed text-slate-500 max-w-sm font-light">
