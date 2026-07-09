@@ -75,7 +75,7 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #E5EEF5; border-radius: 20px; background-color: #FFFFFF; text-align: left;">
               <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #E5EEF5; padding-bottom: 25px;">
-                <img src="https://www.caregiversnearby.com/logo/logo.png" alt="Caregivers Nearby Logo" style="max-height: 50px; width: auto; margin-bottom: 15px;" />
+                <img src="https://www.caregiversnearby.com/logo/caregiverslogo.png" alt="Caregivers Nearby Logo" style="max-height: 50px; width: auto; margin-bottom: 15px;" />
                 <h2 style="color: #0B2D52; margin: 0; font-size: 22px; font-weight: bold; letter-spacing: -0.5px;">New Contact Form Submission</h2>
                 <p style="color: #0DB7C8; margin: 5px 0 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; tracking-wider;">Caregivers Nearby Portal</p>
               </div>
@@ -127,7 +127,7 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 35px; border: 1px solid #E5EEF5; border-radius: 24px; background-color: #FFFFFF; text-align: left;">
               <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #E5EEF5; padding-bottom: 25px;">
-                <img src="https://www.caregiversnearby.com/logo/logo.png" alt="Caregivers Nearby Logo" style="max-height: 50px; width: auto; margin-bottom: 15px;" />
+                <img src="https://www.caregiversnearby.com/logo/caregiverslogo.png" alt="Caregivers Nearby Logo" style="max-height: 50px; width: auto; margin-bottom: 15px;" />
                 <p style="color: #0DB7C8; margin: 5px 0 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; tracking-wider;">Compassionate Care. Trusted Caregivers. Right Nearby.</p>
               </div>
             

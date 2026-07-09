@@ -2,6 +2,7 @@
 
 import { Resend } from "resend";
 import { caregiverSchema, CaregiverFormData } from "@/lib/schema";
+import { getStateFullName } from "@/lib/states";
 
 // Simple in-memory rate limiter (stores timestamp by client identifiers/IPs)
 const rateLimitCache = new Map<string, number>();
@@ -63,7 +64,7 @@ export async function submitCaregiverForm(formData: any, clientIp: string = "unk
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #E5EEF5; border-radius: 20px; background-color: #FFFFFF; text-align: left;">
               <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #E5EEF5; padding-bottom: 25px;">
-                <img src="https://www.caregiversnearby.com/logo/logo.png" alt="Caregivers Nearby Logo" style="max-height: 50px; width: auto; margin-bottom: 15px;" />
+                <img src="https://www.caregiversnearby.com/logo/caregiverslogo.png" alt="Caregivers Nearby Logo" style="max-height: 50px; width: auto; margin-bottom: 15px;" />
                 <h2 style="color: #0B2D52; margin: 0; font-size: 22px; font-weight: bold; letter-spacing: -0.5px;">New Caregiver Application</h2>
                 <p style="color: #0DB7C8; margin: 5px 0 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; tracking-wider;">Join Our Team Intake</p>
               </div>
@@ -82,7 +83,7 @@ export async function submitCaregiverForm(formData: any, clientIp: string = "unk
                 </tr>
                 <tr>
                   <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">State</td>
-                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52; text-transform: uppercase;">${data.state}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #0B2D52;">${getStateFullName(data.state)}</td>
                 </tr>
                 <tr>
                   <td style="padding: 12px 0; border-bottom: 1px solid #E5EEF5; color: #62819f; font-weight: 600;">Years of Experience</td>
@@ -119,7 +120,7 @@ export async function submitCaregiverForm(formData: any, clientIp: string = "unk
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 35px; border: 1px solid #E5EEF5; border-radius: 24px; background-color: #FFFFFF; text-align: left;">
               <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #E5EEF5; padding-bottom: 25px;">
-                <img src="https://www.caregiversnearby.com/logo/logo.png" alt="Caregivers Nearby Logo" style="max-height: 50px; width: auto; margin-bottom: 15px;" />
+                <img src="https://www.caregiversnearby.com/logo/caregiverslogo.png" alt="Caregivers Nearby Logo" style="max-height: 50px; width: auto; margin-bottom: 15px;" />
                 <p style="color: #0DB7C8; margin: 5px 0 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; tracking-wider;">Compassionate Care. Trusted Caregivers. Right Nearby.</p>
               </div>
             

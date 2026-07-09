@@ -100,7 +100,7 @@ export default function Navbar() {
           {/* Logo SVG */}
           <Link href="/" className="flex items-center group rounded-lg cursor-pointer">
             <Image
-              src="/logo/logo.png"
+              src="/logo/caregiverslogo.png"
               alt="Caregivers Nearby"
               width={220}
               height={56}
@@ -108,7 +108,7 @@ export default function Navbar() {
               priority
             />
             <Image
-              src="/logo/logo.png"
+              src="/logo/caregiverslogo.png"
               alt="Caregivers Nearby"
               width={200}
               height={52}
