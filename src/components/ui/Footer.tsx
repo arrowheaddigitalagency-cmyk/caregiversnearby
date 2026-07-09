@@ -44,9 +44,9 @@ export default function Footer() {
               <Image
                 src="/logo/logo.png"
                 alt="Caregivers Nearby"
-                width={175}
-                height={44}
-                className="block md:hidden w-auto h-[44px] group-hover:opacity-90 transition-opacity"
+                width={200}
+                height={52}
+                className="block md:hidden w-auto h-[52px] group-hover:opacity-90 transition-opacity"
                 priority
               />
             </Link>
