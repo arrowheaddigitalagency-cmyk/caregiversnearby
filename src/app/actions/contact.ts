@@ -115,19 +115,7 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
         console.error("Resend admin notification email failed:", adminError);
       }
 
-      // B. User confirmation email
-      // Uses receiverEmail as sender so Resend can deliver it (no custom domain needed)
-      try {
-        await resend.emails.send({
-          from: `Caregivers Nearby <${fromEmail}>`,
-          to: receiverEmail, // send to admin, who forwards — OR use custom domain in FROM_EMAIL for direct user delivery
-          replyTo: data.email,
-          subject: `[AUTO-REPLY] We've Received Your Request - ${data.firstName} ${data.lastName}`,
-          html: `<p>This is an auto-reply confirmation for ${data.firstName} ${data.lastName} (${data.email}). Their inquiry has been received.</p>`,
-        });
-      } catch {}
-
-      // C. Direct user confirmation — works only when FROM_EMAIL is a verified custom domain
+      // B. User confirmation email — directly to user
       try {
         await resend.emails.send({
           from: `Caregivers Nearby <${fromEmail}>`,
