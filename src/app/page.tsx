@@ -393,16 +393,21 @@ export default function Home() {
       {/* 4. WHY FAMILIES TRUST US */}
       <section id="why-us" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             
-            <div className="relative w-full max-w-sm mx-auto lg:mx-0 rounded-[3rem] overflow-hidden shadow-2xl lg:-translate-y-8 lg:scale-105 z-10 border border-slate-100" style={{aspectRatio: '9/16', maxHeight: '600px'}}>
-              <iframe
-                src="https://www.youtube.com/embed/KawuM7c7APA?autoplay=1&mute=1&loop=1&playlist=KawuM7c7APA&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
-                title="Caregivers Nearby"
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-                className="absolute inset-0 w-full h-full border-0"
-              />
+            {/* Video side — full height, equal to content */}
+            <div className="flex items-center justify-center">
+              <div className="relative w-full max-w-[340px] mx-auto rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-100 bg-brand-navy" style={{aspectRatio: '9/16'}}>
+                {/* Decorative background glow */}
+                <div className="absolute -inset-4 bg-gradient-to-br from-brand-teal/20 via-brand-blue/10 to-transparent rounded-[3rem] blur-2xl -z-10" />
+                <iframe
+                  src="https://www.youtube.com/embed/KawuM7c7APA?autoplay=1&mute=1&loop=1&playlist=KawuM7c7APA&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
+                  title="Caregivers Nearby"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full border-0 rounded-[2.5rem]"
+                />
+              </div>
             </div>
 
             <div>
