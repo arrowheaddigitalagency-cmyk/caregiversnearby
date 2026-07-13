@@ -395,13 +395,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
-            <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl lg:-translate-y-8 lg:scale-105 z-10 border border-slate-100">
-              <Image 
-                src="/images/trust/family-trust.png" 
-                alt="Family hugging and smiling with senior"
-                fill
-                className="object-cover"
-                priority
+            <div className="relative aspect-[9/16] rounded-[3rem] overflow-hidden shadow-2xl lg:-translate-y-8 lg:scale-105 z-10 border border-slate-100">
+              <iframe
+                src="https://www.youtube.com/embed/KawuM7c7APA?autoplay=1&mute=1&loop=1&playlist=KawuM7c7APA&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
+                title="Caregivers Nearby"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full border-0"
               />
             </div>
 
