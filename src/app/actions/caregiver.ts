@@ -50,16 +50,17 @@ export async function submitCaregiverForm(formData: any, clientIp: string = "unk
     // 5. Resend Email Delivery
     const apiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.FROM_EMAIL || "onboarding@resend.dev";
+    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || "caregiversnearby@gmail.com";
 
     if (apiKey) {
       const resend = new Resend(apiKey);
-      const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || "caregiversnearby@gmail.com";
 
       // A. Admin notification email
       try {
         await resend.emails.send({
           from: `Caregivers Nearby Portal <${fromEmail}>`,
           to: receiverEmail,
+          reply_to: data.email,
           subject: `New Caregiver Application - ${data.firstName} ${data.lastName}`,
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #E5EEF5; border-radius: 20px; background-color: #FFFFFF; text-align: left;">
@@ -111,7 +112,7 @@ export async function submitCaregiverForm(formData: any, clientIp: string = "unk
         console.error("Resend admin caregiver notification email failed:", adminError);
       }
 
-      // B. Caregiver applicant confirmation email
+      // B. User confirmation email — works when FROM_EMAIL is a verified custom domain
       try {
         await resend.emails.send({
           from: `Caregivers Nearby <${fromEmail}>`,
@@ -123,27 +124,21 @@ export async function submitCaregiverForm(formData: any, clientIp: string = "unk
                 <img src="https://www.caregiversnearby.com/logo/caregiverslogo.png" alt="Caregivers Nearby Logo" style="max-height: 50px; width: auto; margin-bottom: 15px;" />
                 <p style="color: #0DB7C8; margin: 5px 0 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; tracking-wider;">Compassionate Care. Trusted Caregivers. Right Nearby.</p>
               </div>
-            
-            <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Hi ${data.firstName},</p>
-            
-            <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Thank you for your interest in joining our caregiving team at Caregivers Nearby!</p>
-            
-            <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">We have successfully received your caregiver application. Our recruitment team is currently reviewing applications and will reach out to you if your qualifications and availability match our current needs.</p>
-            
-            <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">In the meantime, feel free to visit our website to learn more about the care options and quality standards we provide to our clients.</p>
-            
-            <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">Thank you for your dedication to compassionate care.</p>
-            
-            <div style="border-top: 1px solid #E5EEF5; padding-top: 25px;">
-              <p style="color: #62819f; font-size: 14px; line-height: 1.6; margin: 0; font-style: italic;">Compassionate Care. Trusted Caregivers. Right Nearby.</p>
-              <p style="color: #0B2D52; font-size: 15px; font-weight: bold; margin: 10px 0 0 0;">Caregivers Nearby</p>
-              <p style="margin: 3px 0 0 0; font-size: 14px;"><a href="mailto:caregiversnearby@gmail.com" style="color: #0DB7C8; text-decoration: none;">caregiversnearby@gmail.com</a></p>
+              <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Hi ${data.firstName},</p>
+              <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Thank you for your interest in joining our caregiving team at Caregivers Nearby!</p>
+              <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">We have successfully received your caregiver application. Our recruitment team is currently reviewing applications and will reach out to you if your qualifications and availability match our current needs.</p>
+              <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">In the meantime, feel free to visit our website to learn more about the care options and quality standards we provide to our clients.</p>
+              <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">Thank you for your dedication to compassionate care.</p>
+              <div style="border-top: 1px solid #E5EEF5; padding-top: 25px;">
+                <p style="color: #62819f; font-size: 14px; line-height: 1.6; margin: 0; font-style: italic;">Compassionate Care. Trusted Caregivers. Right Nearby.</p>
+                <p style="color: #0B2D52; font-size: 15px; font-weight: bold; margin: 10px 0 0 0;">Caregivers Nearby</p>
+                <p style="margin: 3px 0 0 0; font-size: 14px;"><a href="mailto:caregiversnearby@gmail.com" style="color: #0DB7C8; text-decoration: none;">caregiversnearby@gmail.com</a></p>
+              </div>
             </div>
-          </div>
-        `,
+          `,
         });
-      } catch (resendError) {
-        console.error("Resend auto-response email to caregiver applicant failed:", resendError);
+      } catch (userEmailError) {
+        console.error("Resend user confirmation email failed:", userEmailError);
       }
     }
 

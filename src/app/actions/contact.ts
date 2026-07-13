@@ -21,13 +21,11 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
       };
     }
     
-    // 2. Honeypot Field Check (if filled, silently fail or return error to prevent spam bot submissions)
+    // 2. Honeypot Field Check
     if (formData.honeypot && formData.honeypot !== "") {
       console.warn("Spam attempt blocked via Honeypot check.");
       return { success: false, error: "Submission blocked by spam filters." };
     }
-
-    // Turnstile verification removed as Web3Forms handles spam.
 
     // 3. Zod validation
     const parsedData = contactSchema.safeParse({
@@ -51,15 +49,13 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
     // 4. Update Rate Limit Cache
     rateLimitCache.set(clientIp, now);
 
-
-
-    // 7. Resend Email Delivery (Visitor Confirmation Email Fallback)
+    // 5. Resend Email Delivery
     const apiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.FROM_EMAIL || "onboarding@resend.dev";
+    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || "caregiversnearby@gmail.com";
 
     if (apiKey) {
       const resend = new Resend(apiKey);
-      const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || "caregiversnearby@gmail.com";
 
       let formattedService = data.serviceNeeded.replace(/-/g, " ");
       if (data.serviceNeeded === "other" && data.otherService) {
@@ -71,6 +67,7 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
         await resend.emails.send({
           from: `Caregivers Nearby Portal <${fromEmail}>`,
           to: receiverEmail,
+          reply_to: data.email,
           subject: "New Contact Form Submission - Caregivers Nearby",
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #E5EEF5; border-radius: 20px; background-color: #FFFFFF; text-align: left;">
@@ -118,42 +115,45 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
         console.error("Resend admin notification email failed:", adminError);
       }
 
-      // B. Visitor confirmation email
+      // B. User confirmation email
+      // Uses receiverEmail as sender so Resend can deliver it (no custom domain needed)
+      try {
+        await resend.emails.send({
+          from: `Caregivers Nearby <${fromEmail}>`,
+          to: receiverEmail, // send to admin, who forwards — OR use custom domain in FROM_EMAIL for direct user delivery
+          reply_to: data.email,
+          subject: `[AUTO-REPLY] We've Received Your Request - ${data.firstName} ${data.lastName}`,
+          html: `<p>This is an auto-reply confirmation for ${data.firstName} ${data.lastName} (${data.email}). Their inquiry has been received.</p>`,
+        });
+      } catch {}
+
+      // C. Direct user confirmation — works only when FROM_EMAIL is a verified custom domain
       try {
         await resend.emails.send({
           from: `Caregivers Nearby <${fromEmail}>`,
           to: data.email,
-          subject: "We've Received Your Request",
+          subject: "We've Received Your Request - Caregivers Nearby",
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 35px; border: 1px solid #E5EEF5; border-radius: 24px; background-color: #FFFFFF; text-align: left;">
               <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #E5EEF5; padding-bottom: 25px;">
                 <img src="https://www.caregiversnearby.com/logo/caregiverslogo.png" alt="Caregivers Nearby Logo" style="max-height: 50px; width: auto; margin-bottom: 15px;" />
                 <p style="color: #0DB7C8; margin: 5px 0 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; tracking-wider;">Compassionate Care. Trusted Caregivers. Right Nearby.</p>
               </div>
-            
-            <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Hi ${data.firstName},</p>
-            
-            <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Thank you for contacting Caregivers Nearby.</p>
-            
-            <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">We have successfully received your request.</p>
-            
-            <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Our team will review your inquiry and contact you as soon as possible.</p>
-            
-            <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">If this is an urgent matter, please call us directly.</p>
-            
-            <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">Thank you for trusting Caregivers Nearby.</p>
-            
-            <div style="border-top: 1px solid #E5EEF5; padding-top: 25px;">
-              <p style="color: #62819f; font-size: 14px; line-height: 1.6; margin: 0; font-style: italic;">Compassionate Care. Trusted Caregivers. Right Nearby.</p>
-              <p style="color: #0B2D52; font-size: 15px; font-weight: bold; margin: 10px 0 0 0;">Caregivers Nearby</p>
-              <p style="margin: 3px 0 0 0; font-size: 14px;"><a href="mailto:caregiversnearby@gmail.com" style="color: #0DB7C8; text-decoration: none;">caregiversnearby@gmail.com</a></p>
+              <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Hi ${data.firstName},</p>
+              <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">Thank you for contacting Caregivers Nearby.</p>
+              <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">We have successfully received your request. Our team will review your inquiry and contact you as soon as possible.</p>
+              <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">If this is an urgent matter, please call us directly at <strong>+1 404-754-2651</strong>.</p>
+              <p style="color: #0B2D52; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">Thank you for trusting Caregivers Nearby.</p>
+              <div style="border-top: 1px solid #E5EEF5; padding-top: 25px;">
+                <p style="color: #62819f; font-size: 14px; line-height: 1.6; margin: 0; font-style: italic;">Compassionate Care. Trusted Caregivers. Right Nearby.</p>
+                <p style="color: #0B2D52; font-size: 15px; font-weight: bold; margin: 10px 0 0 0;">Caregivers Nearby</p>
+                <p style="margin: 3px 0 0 0; font-size: 14px;"><a href="mailto:caregiversnearby@gmail.com" style="color: #0DB7C8; text-decoration: none;">caregiversnearby@gmail.com</a></p>
+              </div>
             </div>
-          </div>
-        `,
+          `,
         });
-      } catch (resendError) {
-        // Log the error but do not fail the request since Web3Forms successfully notified the admin
-        console.error("Resend auto-response email to visitor failed:", resendError);
+      } catch (userEmailError) {
+        console.error("Resend user confirmation email failed:", userEmailError);
       }
     }
 

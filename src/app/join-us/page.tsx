@@ -60,6 +60,7 @@ export default function JoinUs() {
           access_key: "09897199-a6c3-4b13-9e30-d20c6c861b9b",
           subject: `New Caregiver Application - ${data.firstName} ${data.lastName}`,
           from_name: "Caregivers Nearby Recruitment Portal",
+          replyto: data.email,
           "Applicant Name": `${data.firstName} ${data.lastName}`,
           "Email Address": data.email,
           "Phone Number": data.phone,
