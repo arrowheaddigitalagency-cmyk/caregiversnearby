@@ -60,7 +60,7 @@ export async function submitCaregiverForm(formData: any, clientIp: string = "unk
         await resend.emails.send({
           from: `Caregivers Nearby Portal <${fromEmail}>`,
           to: receiverEmail,
-          reply_to: data.email,
+          replyTo: data.email,
           subject: `New Caregiver Application - ${data.firstName} ${data.lastName}`,
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #E5EEF5; border-radius: 20px; background-color: #FFFFFF; text-align: left;">

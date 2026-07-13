@@ -67,7 +67,7 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
         await resend.emails.send({
           from: `Caregivers Nearby Portal <${fromEmail}>`,
           to: receiverEmail,
-          reply_to: data.email,
+          replyTo: data.email,
           subject: "New Contact Form Submission - Caregivers Nearby",
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #E5EEF5; border-radius: 20px; background-color: #FFFFFF; text-align: left;">
@@ -121,7 +121,7 @@ export async function submitContactForm(formData: any, clientIp: string = "unkno
         await resend.emails.send({
           from: `Caregivers Nearby <${fromEmail}>`,
           to: receiverEmail, // send to admin, who forwards — OR use custom domain in FROM_EMAIL for direct user delivery
-          reply_to: data.email,
+          replyTo: data.email,
           subject: `[AUTO-REPLY] We've Received Your Request - ${data.firstName} ${data.lastName}`,
           html: `<p>This is an auto-reply confirmation for ${data.firstName} ${data.lastName} (${data.email}). Their inquiry has been received.</p>`,
         });
