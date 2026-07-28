@@ -139,8 +139,7 @@ export default function Home() {
             priority
           />
           {/* Desktop Left-to-Right Fade */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#FAFAFA] via-[#FAFAFA]/95 to-transparent z-10 hidden lg:block w-[55%]"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#FAFAFA]/90 via-transparent to-transparent z-10 hidden lg:block w-full"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FAFAFA] via-[#FAFAFA] via-50% to-transparent to-62% z-10 hidden lg:block w-full"></div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
