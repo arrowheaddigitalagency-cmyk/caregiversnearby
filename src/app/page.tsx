@@ -128,24 +128,23 @@ export default function Home() {
       <JsonLd type="FAQ" data={FAQS} />
 
       {/* 1. HERO SECTION */}
-      <section id="hero" className="relative overflow-hidden bg-[#FAFAFA] pt-20 pb-32 min-h-[600px] lg:min-h-[750px] flex items-center">
+      <section id="hero" className="relative overflow-hidden bg-[#FAFAFA] pt-10 pb-12 lg:pt-14 lg:pb-20 min-h-[500px] lg:min-h-[580px] flex flex-col justify-center">
         {/* Background Image Container with opacity overlay */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/hero/hero-trust.png"
-            alt="Professional caregiver helping an elderly woman walk"
+            alt="Professional caregiver talking with an elderly woman and her daughter"
             fill
-            className="object-cover object-right lg:object-[center_80%]"
+            className="object-cover object-[80%_30%] sm:object-[82%_25%] lg:object-[85%_20%] xl:object-[88%_20%]"
             priority
           />
           {/* Desktop Left-to-Right Fade */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#FAFAFA] via-[#FAFAFA]/95 to-transparent z-10 hidden lg:block w-full"></div>
-          {/* Mobile Top-to-Bottom Fade - Higher opacity to ensure text is 100% readable on mobile */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#FAFAFA] via-[#FAFAFA]/95 to-[#FAFAFA]/85 z-10 lg:hidden block"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FAFAFA] via-[#FAFAFA]/95 to-transparent z-10 hidden lg:block w-[55%]"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FAFAFA]/90 via-transparent to-transparent z-10 hidden lg:block w-full"></div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             {/* Left Column - Text Content */}
             <div className="lg:col-span-7 flex flex-col items-start text-left z-20">
@@ -155,22 +154,20 @@ export default function Home() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-100 shadow-sm text-brand-navy font-semibold text-xs tracking-wider uppercase mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-100 shadow-sm text-brand-navy font-semibold text-xs tracking-wider uppercase mb-5"
               >
                 <span className="w-2 h-2 rounded-full bg-brand-emerald animate-pulse"></span>
                 <span>Premium In-Home Care Network</span>
               </motion.div>
 
-              {/* Large Emotional Headline - Reduced to text-4xl on mobile to prevent ugly wrapping */}
+              {/* Large Emotional Headline */}
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-4xl sm:text-6xl lg:text-7xl font-bold text-brand-navy tracking-tight leading-[1.1] mb-6"
+                className="text-3xl sm:text-5xl lg:text-6xl font-bold text-brand-navy tracking-tight leading-[1.15] mb-5 max-w-2xl"
               >
-                Compassionate Care.<br />
-                <span className="text-brand-blue bg-gradient-to-r from-brand-blue to-brand-teal bg-clip-text text-transparent">Trusted Professionals.</span><br />
-                Right Nearby.
+                Does Your Aging Parent Need a <span className="text-brand-blue bg-gradient-to-r from-brand-blue to-brand-teal bg-clip-text text-transparent">Helping Hand?</span>
               </motion.h1>
 
               {/* Supporting Paragraph */}
@@ -178,9 +175,9 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-base sm:text-xl leading-relaxed text-slate-600 max-w-xl mb-8 font-light"
+                className="text-base sm:text-lg leading-relaxed text-slate-600 max-w-xl mb-7 font-normal"
               >
-                We connect families with certified, empathetic local caregivers. Experience custom home care blueprints designed for safety, comfort, and real human connection.
+                Compassionate, trusted caregivers who help your loved one stay safe, independent, and cared for at home.
               </motion.p>
 
               {/* CTA Buttons */}
@@ -188,22 +185,22 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-10"
+                className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-8"
               >
-                <Button href="/contact" variant="primary" size="lg" className="h-14 px-8 text-base shadow-xl shadow-brand-blue/20">
+                <Button href="/contact" variant="primary" size="lg" className="h-13 px-7 text-base shadow-xl shadow-brand-blue/20">
                   Find Your Caregiver
                 </Button>
-                <Button href="/about" variant="outline" size="lg" className="h-14 px-8 text-base bg-white">
+                <Button href="/about" variant="outline" size="lg" className="h-13 px-7 text-base bg-white border-slate-200 hover:bg-slate-50">
                   Discover Our Story
                 </Button>
               </motion.div>
 
-              {/* Below CTA: Trust Metrics - Uses grid + divide-x to prevent awkward wrapping on mobile */}
+              {/* Below CTA: Trust Metrics */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="grid grid-cols-3 gap-1 sm:gap-6 border-t border-slate-100 pt-6 w-full max-w-xl divide-x divide-slate-200"
+                className="grid grid-cols-3 gap-1 sm:gap-6 border-t border-slate-200/80 pt-5 w-full max-w-xl divide-x divide-slate-200"
               >
                 <div className="pr-1 sm:pr-4">
                   <p className="text-xl sm:text-2xl font-bold text-brand-navy">100%</p>
@@ -221,83 +218,79 @@ export default function Home() {
 
             </div>
 
-            {/* Right Column: Floating Badges (overlaying background image, desktop only to prevent clutter on mobile) */}
-            <div className="hidden lg:flex lg:col-span-5 relative h-[550px] w-full justify-center items-center lg:self-start lg:mt-12">
+            <div className="hidden lg:block lg:col-span-5"></div>
+          </div>
+
+          {/* Floating Cards aligned in a clean, beautifully spaced Single Row */}
+          <div className="mt-12 hidden md:block">
+            <div className="grid grid-cols-3 xl:grid-cols-4 gap-4 items-center">
               
-              {/* Trust Badges - translateY + opacity animations */}
+              {/* Card 1: Background Checked */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: [0, -8, 0] }}
-                transition={{ 
-                  opacity: { duration: 0.6, delay: 0.5 },
-                  y: { repeat: Infinity, duration: 5, ease: "easeInOut" }
-                }}
-                className="absolute top-4 left-4 lg:-left-12 bg-white/95 backdrop-blur-md shadow-premium px-5 py-3 rounded-2xl flex items-center gap-3 border border-white/60 select-none z-20"
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+                whileHover={{ y: -5 }}
+                className="bg-white/90 backdrop-blur-xl shadow-lg shadow-slate-900/5 p-4 rounded-2xl flex items-center gap-3.5 border border-white/80 ring-1 ring-slate-900/5 select-none transition-all"
               >
-                <div className="w-8 h-8 rounded-xl bg-brand-emerald/10 text-brand-emerald flex items-center justify-center shrink-0">
-                  <ShieldCheck size={18} />
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 shadow-inner">
+                  <ShieldCheck size={20} />
                 </div>
-                <span className="font-bold text-brand-navy text-sm">Background Checked</span>
+                <div>
+                  <span className="block font-bold text-brand-navy text-sm leading-tight">Background Checked</span>
+                  <span className="block text-[11px] text-slate-500 font-medium">100% Verified & Vetted</span>
+                </div>
               </motion.div>
 
+              {/* Card 2: Trusted by Families */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: [0, 8, 0] }}
-                transition={{ 
-                  opacity: { duration: 0.6, delay: 0.6 },
-                  y: { repeat: Infinity, duration: 6, ease: "easeInOut", delay: 0.3 }
-                }}
-                className="absolute top-1/4 right-4 lg:-right-8 bg-white/95 backdrop-blur-md shadow-premium px-5 py-3 rounded-2xl flex items-center gap-3 border border-white/60 select-none z-20"
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                whileHover={{ y: -5 }}
+                className="bg-white/90 backdrop-blur-xl shadow-lg shadow-slate-900/5 p-4 rounded-2xl flex items-center gap-3.5 border border-white/80 ring-1 ring-slate-900/5 select-none transition-all"
               >
-                <div className="w-8 h-8 rounded-xl bg-brand-blue/10 text-brand-blue flex items-center justify-center shrink-0">
-                  <Heart size={18} className="fill-brand-blue/10" />
+                <div className="w-10 h-10 rounded-xl bg-brand-blue/10 text-brand-blue flex items-center justify-center shrink-0 shadow-inner">
+                  <Heart size={20} className="fill-brand-blue/20" />
                 </div>
-                <span className="font-bold text-brand-navy text-sm">Trusted by Families</span>
+                <div>
+                  <span className="block font-bold text-brand-navy text-sm leading-tight">Trusted by Families</span>
+                  <span className="block text-[11px] text-slate-500 font-medium">Top Rated Senior Care</span>
+                </div>
               </motion.div>
 
+              {/* Card 3: Local Caregivers */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: [0, -10, 0] }}
-                transition={{ 
-                  opacity: { duration: 0.6, delay: 0.7 },
-                  y: { repeat: Infinity, duration: 5.5, ease: "easeInOut", delay: 0.6 }
-                }}
-                className="absolute bottom-12 left-8 lg:-left-4 bg-white/95 backdrop-blur-md shadow-premium px-5 py-3 rounded-2xl flex items-center gap-3 border border-white/60 select-none z-20"
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+                whileHover={{ y: -5 }}
+                className="bg-white/90 backdrop-blur-xl shadow-lg shadow-slate-900/5 p-4 rounded-2xl flex items-center gap-3.5 border border-white/80 ring-1 ring-slate-900/5 select-none transition-all"
               >
-                <div className="w-8 h-8 rounded-xl bg-brand-teal/10 text-brand-teal flex items-center justify-center shrink-0">
-                  <MapPin size={18} />
+                <div className="w-10 h-10 rounded-xl bg-brand-teal/10 text-brand-teal flex items-center justify-center shrink-0 shadow-inner">
+                  <MapPin size={20} />
                 </div>
-                <span className="font-bold text-brand-navy text-sm">Local Caregivers</span>
+                <div>
+                  <span className="block font-bold text-brand-navy text-sm leading-tight">Local Caregivers</span>
+                  <span className="block text-[11px] text-slate-500 font-medium">In Your Community</span>
+                </div>
               </motion.div>
 
+              {/* Card 4: Compassion First */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: [0, 6, 0] }}
-                transition={{ 
-                  opacity: { duration: 0.6, delay: 0.8 },
-                  y: { repeat: Infinity, duration: 4.8, ease: "easeInOut", delay: 0.9 }
-                }}
-                className="absolute bottom-24 right-8 lg:right-12 bg-white/95 backdrop-blur-md shadow-premium px-5 py-3 rounded-2xl flex items-center gap-3 border border-white/60 select-none z-20"
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+                whileHover={{ y: -5 }}
+                className="hidden xl:flex bg-white/90 backdrop-blur-xl shadow-lg shadow-slate-900/5 p-4 rounded-2xl items-center gap-3.5 border border-white/80 ring-1 ring-slate-900/5 select-none transition-all"
               >
-                <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center shrink-0">
-                  <Heart size={18} className="fill-rose-50" />
+                <div className="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-600 flex items-center justify-center shrink-0 shadow-inner">
+                  <Heart size={20} className="fill-rose-500/20" />
                 </div>
-                <span className="font-bold text-brand-navy text-sm">Compassion First</span>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: [0, -6, 0] }}
-                transition={{ 
-                  opacity: { duration: 0.6, delay: 0.9 },
-                  y: { repeat: Infinity, duration: 5.2, ease: "easeInOut", delay: 1.2 }
-                }}
-                className="absolute top-1/2 left-4 lg:-left-20 hidden xl:flex bg-white/95 backdrop-blur-md shadow-premium px-5 py-3 rounded-2xl items-center gap-3 border border-white/60 select-none z-20"
-              >
-                <div className="w-8 h-8 rounded-xl bg-brand-sky flex items-center justify-center shrink-0 text-brand-blue">
-                  <Users size={18} />
+                <div>
+                  <span className="block font-bold text-brand-navy text-sm leading-tight">Compassion First</span>
+                  <span className="block text-[11px] text-slate-500 font-medium">Dedicated Support</span>
                 </div>
-                <span className="font-bold text-brand-navy text-sm">Personalized Matching</span>
               </motion.div>
 
             </div>
