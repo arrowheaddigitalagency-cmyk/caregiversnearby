@@ -138,6 +138,8 @@ export default function Home() {
             className="object-cover object-[80%_30%] sm:object-[82%_25%] lg:object-[85%_20%] xl:object-[88%_20%]"
             priority
           />
+          {/* Mobile Top-to-Bottom Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FAFAFA]/95 via-[#FAFAFA]/90 to-[#FAFAFA]/65 lg:hidden z-10"></div>
           {/* Desktop Left-to-Right Fade */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#FAFAFA] via-[#FAFAFA] via-50% to-transparent to-62% z-10 hidden lg:block w-full"></div>
         </div>
