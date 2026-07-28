@@ -132,8 +132,8 @@ export default function Home() {
         {/* Background Image Container with opacity overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/hero/hero-trust.png"
-            alt="Professional caregiver talking with an elderly woman and her daughter"
+            src="/images/hero/new-hero.png"
+            alt="Professional caregiver smiling with an elderly woman"
             fill
             className="object-cover object-[80%_30%] sm:object-[82%_25%] lg:object-[85%_20%] xl:object-[88%_20%]"
             priority
