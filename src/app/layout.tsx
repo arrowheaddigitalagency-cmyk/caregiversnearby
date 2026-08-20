@@ -36,6 +36,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  verification: {
+    google: "gBEfO_WXgZaRHtGJSEDYHAfqPLQ9eqOsoD_9RTsf6AM",
+  },
   openGraph: {
     title: "Caregivers Nearby | Compassionate Care. Trusted Caregivers. Right Nearby.",
     description: "Premium, trusted local caregiver matching network. Helping seniors age safely in the comfort of their own homes.",
