@@ -87,6 +87,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-MK34SK6K');`}
         </Script>
         {/* End Google Tag Manager */}
+        {/* Google Tag (gtag.js) AW-18374237336 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18374237336"
+          strategy="afterInteractive"
+        />
+        <Script id="google-tag-aw-18374237336" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-18374237336');
+          `}
+        </Script>
       </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col font-sans bg-white text-brand-navy">
         {/* Google Tag Manager (noscript) */}
