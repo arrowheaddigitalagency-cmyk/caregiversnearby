@@ -49,6 +49,9 @@ export default function JoinUs() {
     };
 
     try {
+      const experienceLabel = getExperienceLabel(data.experience);
+      const availabilityLabel = getAvailabilityLabel(data.availability);
+
       // 1. Client-Side Web3Forms Submission (Main Admin Email)
       const web3Response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -64,8 +67,8 @@ export default function JoinUs() {
           "Applicant Name": `${data.firstName} ${data.lastName}`,
           "Email Address": data.email,
           "Phone Number": data.phone,
-          "Years of Experience": data.experience,
-          "General Availability": data.availability,
+          "Years of Experience": experienceLabel,
+          "General Availability": availabilityLabel,
           "State": getStateFullName(data.state),
           "Experience & Background": data.aboutMe,
           "Submission Time": new Date().toLocaleString(),
@@ -78,7 +81,11 @@ export default function JoinUs() {
       }
 
       // 2. Execute Next.js Server Action (For Validation, Fallback Email, Rate Limiting)
-      const result = await submitCaregiverForm(payload, "client-browser");
+      const result = await submitCaregiverForm({
+        ...payload,
+        experience: experienceLabel,
+        availability: availabilityLabel,
+      }, "client-browser");
       if (result.success) {
         setSuccess(true);
         setToastMessage("Application submitted successfully!");
@@ -99,20 +106,42 @@ export default function JoinUs() {
   };
 
   const experienceOptions = [
-    { value: "less-than-1", label: "Less than 1 year" },
-    { value: "1-2", label: "1 to 2 years" },
-    { value: "3-5", label: "3 to 5 years" },
-    { value: "5-10", label: "5 to 10 years" },
-    { value: "10-plus", label: "10+ years" },
+    { value: "Less than 1 year", label: "Less than 1 year" },
+    { value: "1 to 2 years", label: "1 to 2 years" },
+    { value: "3 to 5 years", label: "3 to 5 years" },
+    { value: "5 to 10 years", label: "5 to 10 years" },
+    { value: "10+ years", label: "10+ years" },
   ];
 
   const availabilityOptions = [
-    { value: "full-time", label: "Full-Time" },
-    { value: "part-time", label: "Part-Time" },
-    { value: "live-in", label: "Live-In" },
-    { value: "overnight", label: "Overnight / On-Call" },
-    { value: "weekends", label: "Weekends Only" },
+    { value: "Full-Time", label: "Full-Time" },
+    { value: "Part-Time", label: "Part-Time" },
+    { value: "Live-In", label: "Live-In" },
+    { value: "Overnight / On-Call", label: "Overnight / On-Call" },
+    { value: "Weekends Only", label: "Weekends Only" },
   ];
+
+  const getExperienceLabel = (val: string) => {
+    const found = experienceOptions.find((o) => o.value === val || o.label === val);
+    if (found) return found.label;
+    if (val === "1-2") return "1 to 2 years";
+    if (val === "3-5") return "3 to 5 years";
+    if (val === "5-10") return "5 to 10 years";
+    if (val === "10-plus") return "10+ years";
+    if (val === "less-than-1") return "Less than 1 year";
+    return val;
+  };
+
+  const getAvailabilityLabel = (val: string) => {
+    const found = availabilityOptions.find((o) => o.value === val || o.label === val);
+    if (found) return found.label;
+    if (val === "full-time") return "Full-Time";
+    if (val === "part-time") return "Part-Time";
+    if (val === "live-in") return "Live-In";
+    if (val === "overnight") return "Overnight / On-Call";
+    if (val === "weekends") return "Weekends Only";
+    return val;
+  };
 
 
   const breadcrumbData = [
