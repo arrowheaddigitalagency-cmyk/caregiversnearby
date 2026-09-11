@@ -68,13 +68,11 @@ async function upsertPage(
 async function main() {
   const superEmail = (
     process.env.SUPERADMIN_EMAIL ||
-    process.env.ADMIN_EMAIL ||
-    "dev@caregiversnearby.com"
+    "superadmin@caregiversnearby.com"
   ).toLowerCase();
   const superPassword =
     process.env.SUPERADMIN_PASSWORD ||
-    process.env.ADMIN_PASSWORD ||
-    "SuperAdminChangeMe!";
+    "ChangeMeSuperAdmin!";
   const superHash = await bcrypt.hash(superPassword, 12);
 
   await prisma.user.upsert({
@@ -92,36 +90,29 @@ async function main() {
     },
   });
 
-  // Optional client admin (created only when CLIENT_ADMIN_EMAIL is set)
-  const clientEmail = process.env.CLIENT_ADMIN_EMAIL?.toLowerCase().trim();
+  // Optional client admin — only create if missing; never overwrite an existing password
+  const clientEmail = (
+    process.env.CLIENT_ADMIN_EMAIL ||
+    "admin@caregiversnearby.com"
+  ).toLowerCase();
   const clientPassword = process.env.CLIENT_ADMIN_PASSWORD || "AdminChangeMe123!";
-  if (clientEmail) {
-    const clientHash = await bcrypt.hash(clientPassword, 12);
-    await prisma.user.upsert({
-      where: { email: clientEmail },
-      create: {
+  const existingClient = await prisma.user.findUnique({
+    where: { email: clientEmail },
+  });
+  if (!existingClient) {
+    await prisma.user.create({
+      data: {
         email: clientEmail,
-        passwordHash: clientHash,
+        passwordHash: await bcrypt.hash(clientPassword, 12),
         name: "Site Admin",
         role: Role.ADMIN,
       },
-      update: {
-        passwordHash: clientHash,
-        role: Role.ADMIN,
-      },
     });
-  }
-
-  // If the old default admin email exists and is different from super, promote/create cleanly
-  const legacyEmail = "admin@caregiversnearby.com";
-  if (legacyEmail !== superEmail && !clientEmail) {
-    const legacy = await prisma.user.findUnique({ where: { email: legacyEmail } });
-    if (legacy && legacy.role !== Role.SUPER_ADMIN) {
-      await prisma.user.update({
-        where: { email: legacyEmail },
-        data: { role: Role.ADMIN },
-      });
-    }
+  } else if (existingClient.role === Role.SUPER_ADMIN && clientEmail !== superEmail) {
+    await prisma.user.update({
+      where: { email: clientEmail },
+      data: { role: Role.ADMIN },
+    });
   }
 
   await prisma.siteSettings.upsert({
@@ -194,9 +185,7 @@ async function main() {
 
   console.log("Seed complete.");
   console.log(`Super Admin login: ${superEmail}`);
-  if (clientEmail) {
-    console.log(`Client Admin login: ${clientEmail}`);
-  }
+  console.log(`Client Admin email (password preserved if exists): ${clientEmail}`);
 }
 
 main()
