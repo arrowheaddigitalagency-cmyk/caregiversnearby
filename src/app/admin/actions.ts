@@ -8,6 +8,11 @@ import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/cms";
+import {
+  canCreateRole,
+  canManageUser,
+  isStaffAdmin,
+} from "@/lib/roles";
 
 async function requireAuth() {
   const session = await auth();
@@ -17,9 +22,10 @@ async function requireAuth() {
   return session;
 }
 
-async function requireAdmin() {
+/** Client admin or developer super admin */
+async function requireStaffAdmin() {
   const session = await requireAuth();
-  if (session.user.role !== Role.ADMIN) {
+  if (!isStaffAdmin(session.user.role)) {
     throw new Error("Admin only");
   }
   return session;
@@ -36,7 +42,7 @@ const seoSchema = z.object({
 });
 
 export async function updateSiteSettings(formData: FormData) {
-  await requireAdmin();
+  await requireStaffAdmin();
   await prisma.siteSettings.upsert({
     where: { id: "default" },
     create: {
@@ -213,7 +219,8 @@ export async function uploadAdminImage(formData: FormData) {
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     return {
       ok: false as const,
-      error: "BLOB_READ_WRITE_TOKEN is not configured",
+      error:
+        "Image uploads are not available yet. Please ask a developer to finish media storage setup.",
     };
   }
 
@@ -224,15 +231,27 @@ export async function uploadAdminImage(formData: FormData) {
 }
 
 export async function createUser(formData: FormData) {
-  await requireAdmin();
+  const session = await requireStaffAdmin();
   const email = String(formData.get("email") || "")
     .toLowerCase()
     .trim();
   const name = String(formData.get("name") || "").trim();
   const password = String(formData.get("password") || "");
-  const role = String(formData.get("role") || "SEO") as Role;
+  const requestedRole = String(formData.get("role") || "SEO");
 
   if (!email || password.length < 8) {
+    return;
+  }
+
+  const role =
+    requestedRole === "ADMIN"
+      ? Role.ADMIN
+      : requestedRole === "SUPER_ADMIN"
+        ? Role.SUPER_ADMIN
+        : Role.SEO;
+
+  // Never allow creating SUPER_ADMIN from the dashboard
+  if (role === Role.SUPER_ADMIN || !canCreateRole(session.user.role, role)) {
     return;
   }
 
@@ -242,7 +261,7 @@ export async function createUser(formData: FormData) {
         email,
         name: name || null,
         passwordHash: await bcrypt.hash(password, 12),
-        role: role === Role.ADMIN ? Role.ADMIN : Role.SEO,
+        role,
       },
     });
   } catch {
@@ -253,10 +272,67 @@ export async function createUser(formData: FormData) {
 }
 
 export async function deleteUser(id: string) {
-  const session = await requireAdmin();
+  const session = await requireStaffAdmin();
   if (session.user.id === id) {
     return;
   }
+
+  const target = await prisma.user.findUnique({ where: { id } });
+  if (!target || !canManageUser(session.user.role, target.role)) {
+    return;
+  }
+
   await prisma.user.delete({ where: { id } });
   revalidatePath("/admin/users");
+}
+
+export async function changeOwnPassword(input: {
+  currentPassword: string;
+  newPassword: string;
+}) {
+  const session = await requireAuth();
+  if (input.newPassword.length < 8) {
+    return { ok: false as const, error: "New password must be at least 8 characters" };
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+  });
+  if (!user) {
+    return { ok: false as const, error: "User not found" };
+  }
+
+  const valid = await bcrypt.compare(input.currentPassword, user.passwordHash);
+  if (!valid) {
+    return { ok: false as const, error: "Current password is incorrect" };
+  }
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { passwordHash: await bcrypt.hash(input.newPassword, 12) },
+  });
+
+  return { ok: true as const };
+}
+
+export async function resetUserPassword(input: {
+  userId: string;
+  newPassword: string;
+}) {
+  const session = await requireStaffAdmin();
+  if (input.newPassword.length < 8) {
+    return { ok: false as const, error: "Password must be at least 8 characters" };
+  }
+
+  const target = await prisma.user.findUnique({ where: { id: input.userId } });
+  if (!target || !canManageUser(session.user.role, target.role)) {
+    return { ok: false as const, error: "Not allowed to reset this user" };
+  }
+
+  await prisma.user.update({
+    where: { id: input.userId },
+    data: { passwordHash: await bcrypt.hash(input.newPassword, 12) },
+  });
+
+  return { ok: true as const };
 }

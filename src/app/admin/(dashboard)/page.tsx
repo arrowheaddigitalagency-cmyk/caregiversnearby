@@ -42,7 +42,7 @@ export default async function AdminOverviewPage() {
       tint: "from-teal-500/15 to-transparent",
     },
     {
-      label: "Local SEO pages",
+      label: "Local area pages",
       value: counts.locations,
       href: "/admin/locations",
       icon: MapPinned,
@@ -114,15 +114,20 @@ export default async function AdminOverviewPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-[1.5rem] border border-white bg-white p-6 shadow-[0_12px_40px_rgba(11,45,82,0.05)]">
-          <h2 className="font-heading text-lg font-bold">What is Local SEO?</h2>
+          <h2 className="font-heading text-lg font-bold">Local area pages</h2>
           <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            Local SEO pages are city/county landings like{" "}
+            These are city/county landing pages such as{" "}
             <code className="rounded bg-slate-100 px-1.5 py-0.5 text-xs">
               /locations/madison-ga
             </code>
-            . Google pe “caregivers near Madison GA” jaisi searches ke liye yeh
-            pages rank karwati hain. SEO team inhe create/publish karti hai —
-            yeh alag service catalog nahi hai.
+            . They help Google rank searches like “caregivers near Madison GA”.
+            Visitors find them under{" "}
+            <strong>Service Areas</strong> in the site footer and at{" "}
+            <code className="rounded bg-slate-100 px-1.5 py-0.5 text-xs">
+              /locations
+            </code>
+            . The template is already designed — the SEO team fills in content
+            and meta; no developer needed for each new city.
           </p>
         </div>
         <div className="rounded-[1.5rem] border border-white bg-white p-6 shadow-[0_12px_40px_rgba(11,45,82,0.05)] text-sm text-slate-600">
@@ -131,9 +136,9 @@ export default async function AdminOverviewPage() {
           </h2>
           <ul className="mt-3 list-disc space-y-2 pl-5">
             <li>Title ≈ 50–60 characters; description ≈ 150–160.</li>
-            <li>Draft first, then Publish — drafts stay out of sitemap.</li>
-            <li>Blog cover images upload Blog editor ya Media se.</li>
-            <li>Settings: SEO team dekh sakti hai, sirf Admin edit kare.</li>
+            <li>Draft first, then Publish — drafts stay out of the sitemap.</li>
+            <li>Use 1200×630 px images for Open Graph (social share) previews.</li>
+            <li>Settings are view-only for SEO users; only Admins can edit.</li>
           </ul>
         </div>
       </div>

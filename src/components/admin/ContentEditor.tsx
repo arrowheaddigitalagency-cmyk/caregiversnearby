@@ -9,6 +9,8 @@ import {
   saveContentEntry,
   uploadAdminImage,
 } from "@/app/admin/actions";
+import { IMAGE_SIZE_HINTS } from "@/lib/imageHints";
+import { OgImagePreview } from "@/components/admin/OgImagePreview";
 
 type SeoFields = {
   title: string;
@@ -157,6 +159,9 @@ export function ContentEditor({
 
           <div className="md:col-span-2">
             <label className="block text-sm font-medium">Cover image</label>
+            <p className="mt-0.5 text-xs text-slate-500">
+              {IMAGE_SIZE_HINTS.cover}
+            </p>
             <div className="mt-1 flex flex-col gap-3 sm:flex-row sm:items-start">
               <input
                 value={coverImage}
@@ -202,9 +207,12 @@ export function ContentEditor({
 
           <div className="md:col-span-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <label className="block text-sm font-medium">
-                Body (HTML allowed)
-              </label>
+              <div>
+                <label className="block text-sm font-medium">
+                  Body (HTML allowed)
+                </label>
+                <p className="text-xs text-slate-500">{IMAGE_SIZE_HINTS.body}</p>
+              </div>
               <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-brand-teal/10 px-3 py-1 text-xs font-semibold text-brand-teal">
                 {uploading === "body" ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -264,6 +272,7 @@ export function ContentEditor({
           />
           <div>
             <label className="block text-sm font-medium">OG image</label>
+            <p className="mt-0.5 text-xs text-slate-500">{IMAGE_SIZE_HINTS.og}</p>
             <div className="mt-1 flex gap-2">
               <input
                 value={seo.ogImage}
@@ -283,6 +292,9 @@ export function ContentEditor({
                   onChange={(e) => handleUpload(e.target.files?.[0], "og")}
                 />
               </label>
+            </div>
+            <div className="mt-3">
+              <OgImagePreview url={seo.ogImage || coverImage} />
             </div>
           </div>
           <div className="md:col-span-2">

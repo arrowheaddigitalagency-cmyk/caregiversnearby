@@ -43,7 +43,7 @@ const NAV: NavItem[] = [
   },
   {
     href: "/admin/locations",
-    label: "Local SEO",
+    label: "Local areas",
     description: "City / county pages",
     icon: MapPinned,
   },
@@ -78,8 +78,9 @@ export function AdminSidebar({
   signOutAction: () => Promise<void>;
 }) {
   const pathname = usePathname();
-  const isAdmin = role === "ADMIN";
-  const items = NAV.filter((item) => !item.adminOnly || isAdmin);
+  const staff =
+    role === "ADMIN" || role === "SUPER_ADMIN";
+  const items = NAV.filter((item) => !item.adminOnly || staff);
 
   function isActive(href: string) {
     if (href === "/admin") return pathname === "/admin";

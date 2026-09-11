@@ -10,6 +10,7 @@ import {
   TESTIMONIALS,
   WHY_US,
 } from "@/lib/data/content";
+import { DEFAULT_SITE_OG_FALLBACK } from "@/lib/imageHints";
 
 const BASE_URL = "https://www.caregiversnearby.com";
 
@@ -176,7 +177,7 @@ export function buildMetadataFromSeo(opts: {
     opts.seo?.canonical || defaults?.canonical || opts.path;
   const ogTitle = opts.seo?.ogTitle || title;
   const ogDescription = opts.seo?.ogDescription || description;
-  const ogImage = opts.seo?.ogImage || undefined;
+  const ogImage = opts.seo?.ogImage || DEFAULT_SITE_OG_FALLBACK;
 
   return {
     title,
@@ -193,13 +194,13 @@ export function buildMetadataFromSeo(opts: {
       siteName: "Caregivers Nearby",
       locale: "en_US",
       type: "website",
-      ...(ogImage ? { images: [{ url: ogImage }] } : {}),
+      images: [{ url: ogImage }],
     },
     twitter: {
       card: "summary_large_image",
       title: ogTitle,
       description: ogDescription,
-      ...(ogImage ? { images: [ogImage] } : {}),
+      images: [ogImage],
     },
     robots: opts.seo?.noIndex
       ? { index: false, follow: false }

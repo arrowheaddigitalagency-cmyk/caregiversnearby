@@ -18,16 +18,22 @@ export default async function AdminLocationsList() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="font-heading text-3xl font-bold">Local SEO pages</h1>
+          <h1 className="font-heading text-3xl font-bold">Local area pages</h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
-            Yeh city/county landing pages hain — jaise{" "}
-            <strong>Madison GA</strong>, <strong>Athens</strong>,{" "}
-            <strong>Baldwin County</strong>. Google local searches ke liye SEO
-            team yeh pages banati hai (
+            Create city or county landing pages (for example Madison GA or
+            Baldwin County). They appear on the public site at{" "}
+            <Link
+              href="/locations"
+              className="font-semibold text-brand-teal hover:underline"
+            >
+              /locations
+            </Link>{" "}
+            and each page gets its own URL like{" "}
             <code className="rounded bg-slate-100 px-1 text-xs">
-              /locations/your-city
+              /locations/madison-ga
             </code>
-            ). Yeh homepage services list nahi hai.
+            . The page layout is already built — you only add the content and
+            SEO. This is separate from the homepage Services section.
           </p>
         </div>
         <Link

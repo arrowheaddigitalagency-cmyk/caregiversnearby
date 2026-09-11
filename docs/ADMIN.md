@@ -1,45 +1,43 @@
 # SEO Admin CMS — Team Handoff
 
 ## What this is
-Password-protected CMS at `/admin` for Caregivers Nearby. SEO team edits meta tags, core page content, blog posts, and local city/county landing pages.
+Password-protected CMS at `/admin` for Caregivers Nearby. The SEO team edits meta tags, core page content, blog posts, and local city/county landing pages.
 
-## BLOB_READ_WRITE_TOKEN (image uploads)
+## Where content appears
 
-1. Open [Vercel Dashboard](https://vercel.com/dashboard) → project **caregiversnearby**
-2. **Storage** → **Create** → **Blob**
-3. Copy the read/write token
-4. **Settings → Environment Variables** → add `BLOB_READ_WRITE_TOKEN` for Production + Preview
-5. Local: paste the same value into `.env.local`
-6. Redeploy (or restart `npm run dev`)
+| Admin area | Public URL |
+|------------|------------|
+| Pages | `/`, `/about`, `/contact`, `/join-us` |
+| Blog | `/blog` and `/blog/[slug]` (also in main nav) |
+| Local areas | `/locations` and `/locations/[slug]` (footer: Service Areas) |
 
-Without this token, Media / blog image upload will show an error.
+Local area pages use the same clean article layout as blog posts — they do not break the site design. The template is built once by developers; the SEO team creates each city/county page and manages its SEO over time.
 
-## Setup (developers)
+## Image sizes
 
-1. Neon Postgres `DATABASE_URL`
-2. `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`
-3. Optional: `BLOB_READ_WRITE_TOKEN`
-4. `npm run db:setup` then `npm run dev`
-5. `/admin/login`
+| Use | Recommended size |
+|-----|------------------|
+| Open Graph (social share) | **1200×630 px** |
+| Blog / page cover | **1600×900 px** (16:9) |
+| Images inside article body | Max width **1200 px** |
 
-## SEO team areas
+Prefer JPG or WebP, keep files under ~300–500 KB.
 
-| Area | Use for |
-|------|---------|
-| **Pages** | Home, About, Contact, Join Us — SEO meta + sections JSON |
-| **Blog** | Articles at `/blog` + `/blog/[slug]` with cover/body images |
-| **Local SEO** | City/county landings at `/locations/[slug]` for Google local search |
-| **Media** | Standalone image uploads |
-| **Settings** | View for SEO users; **Admin only** can edit |
-| **Users** | Admin invites SEO teammates |
+## Media uploads (developers)
 
-### What Local SEO means
-Not the homepage “Services” section. These are separate pages like `/locations/madison-ga` so Google can rank “caregivers near Madison GA”.
+Create a Vercel Blob store and ensure `BLOB_READ_WRITE_TOKEN` is set on Production / Preview (and locally via `vercel env pull`). SEO users only see the upload UI — not setup steps.
 
-### Meta tips
+## Roles
+
+| Role | Access |
+|------|--------|
+| **SUPER_ADMIN** | Developer only. Creates Admins + SEO users. Full access. Credentials stay with the developer team. |
+| **ADMIN** | Client admin. Creates SEO users, edits settings, manages content. Cannot create Super Admins. |
+| **SEO** | Edit pages, blog, local areas, media; **view-only** settings |
+
+Seed with `SUPERADMIN_EMAIL` / `SUPERADMIN_PASSWORD`. Optionally set `CLIENT_ADMIN_EMAIL` / `CLIENT_ADMIN_PASSWORD` for the client admin.
+
+## Meta tips
 - Title ≈ 50–60 characters; description ≈ 150–160
-- Draft → Publish (drafts stay out of sitemap)
-- noindex only when a page must stay out of Google
-
-## Out of scope
-Rank tracking tools (Search Console / Ahrefs). Service landing page CMS (removed — developer builds those if needed).
+- Draft → Publish (drafts stay out of the sitemap)
+- Use noindex only when a page must stay out of Google

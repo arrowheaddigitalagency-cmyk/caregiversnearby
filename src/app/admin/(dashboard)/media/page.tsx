@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { Copy, ImagePlus, Loader2 } from "lucide-react";
 import { uploadAdminImage } from "@/app/admin/actions";
+import { IMAGE_SIZE_HINTS } from "@/lib/imageHints";
 
 export default function AdminMediaPage() {
   const [url, setUrl] = useState("");
@@ -39,42 +40,10 @@ export default function AdminMediaPage() {
       <div>
         <h1 className="font-heading text-3xl font-bold">Media library</h1>
         <p className="mt-1 text-slate-600">
-          Upload images for blog covers, OG tags, and article body.
+          Upload images for blog covers, Open Graph (social share) previews, and
+          article content. Copy the URL and paste it into a page or blog post.
         </p>
-      </div>
-
-      <div className="rounded-[1.5rem] border border-sky-100 bg-sky-50/80 p-5 text-sm text-slate-700">
-        <p className="font-semibold text-brand-navy">
-          BLOB_READ_WRITE_TOKEN kaise banayein
-        </p>
-        <ol className="mt-3 list-decimal space-y-2 pl-5">
-          <li>
-            Vercel Dashboard → project <strong>caregiversnearby</strong> →{" "}
-            <strong>Storage</strong> → <strong>Create</strong> →{" "}
-            <strong>Blob</strong>
-          </li>
-          <li>Store create hone ke baad token generate / copy karo</li>
-          <li>
-            Project → <strong>Settings → Environment Variables</strong> → add{" "}
-            <code className="rounded bg-white px-1.5 py-0.5 text-xs">
-              BLOB_READ_WRITE_TOKEN
-            </code>{" "}
-            (Production + Preview)
-          </li>
-          <li>Local ke liye same value `.env.local` mein paste karo</li>
-          <li>Redeploy / restart `npm run dev`</li>
-        </ol>
-        <p className="mt-3 text-xs text-slate-500">
-          Direct link:{" "}
-          <a
-            className="font-medium text-brand-teal hover:underline"
-            href="https://vercel.com/dashboard"
-            target="_blank"
-            rel="noreferrer"
-          >
-            vercel.com/dashboard
-          </a>
-        </p>
+        <p className="mt-2 text-sm text-slate-500">{IMAGE_SIZE_HINTS.media}</p>
       </div>
 
       <div className="rounded-[1.5rem] border border-dashed border-slate-300 bg-white p-8 text-center shadow-[0_12px_40px_rgba(11,45,82,0.04)]">
@@ -89,7 +58,7 @@ export default function AdminMediaPage() {
           <span className="text-sm font-semibold text-brand-navy">
             {pending ? "Uploading…" : "Click to upload an image"}
           </span>
-          <span className="text-xs text-slate-500">PNG, JPG, WEBP</span>
+          <span className="text-xs text-slate-500">PNG, JPG, or WebP</span>
           <input
             type="file"
             accept="image/*"
@@ -97,9 +66,7 @@ export default function AdminMediaPage() {
             onChange={onUpload}
           />
         </label>
-        {error ? (
-          <p className="mt-4 text-sm text-red-600">{error}</p>
-        ) : null}
+        {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
         {url ? (
           <div className="mx-auto mt-6 max-w-lg space-y-3 text-left">
             {/* eslint-disable-next-line @next/next/no-img-element */}

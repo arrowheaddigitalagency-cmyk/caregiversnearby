@@ -1,11 +1,11 @@
-import { Role } from "@prisma/client";
 import { updateSiteSettings } from "@/app/admin/actions";
 import { getSiteSettings } from "@/lib/cms";
 import { auth } from "@/lib/auth";
+import { isStaffAdmin } from "@/lib/roles";
 
 export default async function AdminSettingsPage() {
   const session = await auth();
-  const isAdmin = session?.user?.role === Role.ADMIN;
+  const canEdit = isStaffAdmin(session?.user?.role);
   const settings = await getSiteSettings();
 
   const fields = [
@@ -23,13 +23,13 @@ export default async function AdminSettingsPage() {
         <h1 className="font-heading text-3xl font-bold">Site settings</h1>
         <p className="mt-1 text-slate-600">
           Business info used in schema markup and contact surfaces.
-          {!isAdmin
+          {!canEdit
             ? " You can view these values; only an Admin can edit them."
             : ""}
         </p>
       </div>
 
-      {isAdmin ? (
+      {canEdit ? (
         <form
           action={updateSiteSettings}
           className="space-y-4 rounded-[1.5rem] border border-white bg-white p-6 shadow-[0_12px_40px_rgba(11,45,82,0.05)]"
