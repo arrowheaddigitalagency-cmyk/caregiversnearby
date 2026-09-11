@@ -50,6 +50,7 @@ export default function Navbar() {
     { name: "Services", href: "/#services", isAnchor: true, anchorId: "services" },
     { name: "Why Choose Us", href: "/#why-us", isAnchor: true, anchorId: "why-us" },
     { name: "About Us", href: "/about", isAnchor: false },
+    { name: "Blog", href: "/blog", isAnchor: false },
     { name: "Request Care", href: "/contact", isAnchor: false },
   ];
 

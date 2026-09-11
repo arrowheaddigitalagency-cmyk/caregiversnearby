@@ -1,7 +1,7 @@
 export const SITE_INFO = {
   name: "Caregivers Nearby",
   tagline: "Compassionate Care. Trusted Caregivers. Right Nearby.",
-  phone: "(800) 555-0199",
+  phone: "+1 404-754-2651",
   email: "caregiversnearby@gmail.com",
   hours: "24/7 Care Support | Office Hours: Mon-Fri, 8 AM - 6 PM EST",
   address: "1141 Hawthorne Circle, Madison, GA, 30650, USA",

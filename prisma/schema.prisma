@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  SEO
+}
+
+enum ContentType {
+  PAGE
+  BLOG
+  SERVICE
+  LOCATION
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  role         Role     @default(SEO)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ContentEntry {
+  id          String        @id @default(cuid())
+  type        ContentType
+  slug        String
+  title       String
+  h1          String?
+  excerpt     String?
+  body        String?
+  sections    Json?
+  coverImage  String?
+  status      ContentStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  seo         SeoMeta?
+
+  @@unique([type, slug])
+  @@index([type, status])
+}
+
+model SeoMeta {
+  id             String       @id @default(cuid())
+  contentEntryId String       @unique
+  contentEntry   ContentEntry @relation(fields: [contentEntryId], references: [id], onDelete: Cascade)
+  title          String?
+  description    String?
+  canonical      String?
+  ogTitle        String?
+  ogDescription  String?
+  ogImage        String?
+  noIndex        Boolean      @default(false)
+  jsonLd         Json?
+  updatedAt      DateTime     @updatedAt
+}
+
+model SiteSettings {
+  id               String   @id @default("default")
+  name             String   @default("Caregivers Nearby")
+  tagline          String?
+  phone            String?
+  email            String?
+  hours            String?
+  address          String?
+  emergencyNotice  String?
+  updatedAt        DateTime @updatedAt
+}

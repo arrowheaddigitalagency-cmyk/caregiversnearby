@@ -26,7 +26,14 @@ import {
   Activity,
   Phone
 } from "lucide-react";
-import { SERVICES, WHY_US, STEPS, TESTIMONIALS, FAQS, SITE_INFO } from "@/lib/data/content";
+import {
+  SERVICES,
+  STEPS,
+  TESTIMONIALS,
+  FAQS,
+  SITE_INFO,
+  type Service,
+} from "@/lib/data/content";
 import Button from "@/components/ui/Button";
 import Accordion from "@/components/ui/Accordion";
 import JsonLd from "@/components/seo/JsonLd";
@@ -48,73 +55,87 @@ const iconMap: Record<string, React.ComponentType<any>> = {
 
 const stepIcons = [Phone, Calendar, Users, Heart, CheckCircle2];
 
-export default function Home() {
+type HomeClientProps = {
+  services?: Service[];
+  steps?: typeof STEPS;
+  testimonials?: typeof TESTIMONIALS;
+  faqs?: typeof FAQS;
+  sitePhone?: string;
+};
+
+export default function HomeClient({
+  services = SERVICES,
+  steps = STEPS,
+  testimonials = TESTIMONIALS,
+  faqs = FAQS,
+  sitePhone = SITE_INFO.phone,
+}: HomeClientProps) {
   const bentoServices = [
     {
-      ...SERVICES[0], // Companion Care
+      ...services[0], // Companion Care
       cols: "col-span-12 lg:col-span-8",
       image: "/images/services/companion-care.jpg",
       number: "01",
       heightClass: "h-[28rem]",
     },
     {
-      ...SERVICES[1], // Personal Assistance
+      ...services[1], // Personal Assistance
       cols: "col-span-12 lg:col-span-4",
       image: "/images/services/personal-assistance.jpg",
       number: "02",
       heightClass: "h-[28rem]",
     },
     {
-      ...SERVICES[2], // Meal Preparation
+      ...services[2], // Meal Preparation
       cols: "col-span-12 md:col-span-6 lg:col-span-4",
       image: "/images/services/meal-preparation.jpg",
       number: "03",
       heightClass: "h-96",
     },
     {
-      ...SERVICES[3], // Medication Reminders
+      ...services[3], // Medication Reminders
       cols: "col-span-12 md:col-span-6 lg:col-span-4",
       image: "/images/services/medication-reminders.jpg",
       number: "04",
       heightClass: "h-96",
     },
     {
-      ...SERVICES[4], // Transportation
+      ...services[4], // Transportation
       cols: "col-span-12 lg:col-span-4",
       image: "/images/services/transportation.jpg",
       number: "05",
       heightClass: "h-96",
     },
     {
-      ...SERVICES[5], // Errands & Shopping
+      ...services[5], // Errands & Shopping
       cols: "col-span-12 lg:col-span-7",
       image: "/images/services/errands-shopping.jpg",
       number: "06",
       heightClass: "h-[30rem]",
     },
     {
-      ...SERVICES[6], // Light Housekeeping
+      ...services[6], // Light Housekeeping
       cols: "col-span-12 lg:col-span-5",
       image: "/images/services/light-housekeeping.jpg",
       number: "07",
       heightClass: "h-[30rem]",
     },
     {
-      ...SERVICES[7], // Hospital Transition
+      ...services[7], // Hospital Transition
       cols: "col-span-12 md:col-span-6 lg:col-span-6",
       image: "/images/services/hospital-transition.jpg",
       number: "08",
       heightClass: "h-[26rem]",
     },
     {
-      ...SERVICES[8], // Respite Care
+      ...services[8], // Respite Care
       cols: "col-span-12 md:col-span-6 lg:col-span-6",
       image: "/images/services/respite-care.jpg",
       number: "09",
       heightClass: "h-[26rem]",
     },
     {
-      ...SERVICES[9], // Alzheimer's Care
+      ...services[9], // Alzheimer's Care
       cols: "col-span-12",
       image: "/images/services/alzheimers-care.jpg",
       number: "10",
@@ -124,8 +145,8 @@ export default function Home() {
 
   return (
     <div className="relative bg-[#FAFAFA]">
-      <JsonLd type="LocalBusiness" />
-      <JsonLd type="FAQ" data={FAQS} />
+      <JsonLd type="LocalBusiness" siteInfo={{ phone: sitePhone }} />
+      <JsonLd type="FAQ" data={faqs} />
 
       {/* 1. HERO SECTION */}
       <section id="hero" className="relative overflow-hidden bg-[#FAFAFA] pt-10 pb-12 lg:pt-14 lg:pb-20 min-h-[500px] lg:min-h-[580px] flex flex-col justify-center">
@@ -495,7 +516,7 @@ export default function Home() {
                 }
               }}
             >
-              {STEPS.map((step, idx) => {
+              {steps.map((step, idx) => {
                 const IconComp = stepIcons[idx] || CheckCircle2;
                 return (
                   <motion.div 
@@ -547,7 +568,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {TESTIMONIALS.map((item, idx) => (
+            {testimonials.map((item, idx) => (
               <div
                 key={idx}
                 className="bg-[#FAFAFA] p-10 rounded-[2.5rem] flex flex-col justify-between h-full relative"
@@ -585,7 +606,7 @@ export default function Home() {
               Frequently Asked Questions
             </h2>
           </div>
-          <Accordion items={FAQS} />
+          <Accordion items={faqs} />
         </div>
       </section>
 

@@ -70,6 +70,16 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/blog" className="hover:text-brand-blue transition-colors text-slate-500 font-medium">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link href="/locations" className="hover:text-brand-blue transition-colors text-slate-500 font-medium">
+                  Service Areas
+                </Link>
+              </li>
+              <li>
                 <Link href="/join-us" className="hover:text-brand-blue transition-colors text-slate-500 font-medium">
                   Join Us as a Caregiver
                 </Link>

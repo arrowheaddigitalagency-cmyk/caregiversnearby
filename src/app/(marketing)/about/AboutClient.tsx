@@ -8,7 +8,15 @@ import { ABOUT_CONTENT, SITE_INFO } from "@/lib/data/content";
 import Button from "@/components/ui/Button";
 import JsonLd from "@/components/seo/JsonLd";
 
-export default function About() {
+type AboutClientProps = {
+  about?: typeof ABOUT_CONTENT;
+  siteInfo?: typeof SITE_INFO;
+};
+
+export default function AboutClient({
+  about = ABOUT_CONTENT,
+  siteInfo: _siteInfo = SITE_INFO,
+}: AboutClientProps) {
   const breadcrumbData = [
     { name: "Home", item: "https://www.caregiversnearby.com" },
     { name: "About Us", item: "https://www.caregiversnearby.com/about" },
@@ -91,7 +99,7 @@ export default function About() {
                 {/* Float stats panel */}
                 <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-md rounded-3xl p-5 shadow-2xl border border-white/60">
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:divide-x sm:divide-slate-100">
-                    {ABOUT_CONTENT.stats.map((stat, idx) => (
+                    {about.stats.map((stat, idx) => (
                       <div key={idx} className="text-center px-1">
                         <p className="text-2xl sm:text-3xl font-extrabold text-brand-navy mb-0.5">{stat.value}</p>
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{stat.label}</p>
@@ -162,7 +170,7 @@ export default function About() {
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-bold text-brand-navy mb-6">Our Mission</h2>
                 <p className="text-base sm:text-lg text-slate-500 leading-relaxed font-light">
-                  {ABOUT_CONTENT.mission}
+                  {about.mission}
                 </p>
               </div>
             </div>
@@ -175,7 +183,7 @@ export default function About() {
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-bold text-brand-navy mb-6">Our Vision</h2>
                 <p className="text-base sm:text-lg text-slate-500 leading-relaxed font-light">
-                  {ABOUT_CONTENT.vision}
+                  {about.vision}
                 </p>
               </div>
             </div>
@@ -202,7 +210,7 @@ export default function About() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {ABOUT_CONTENT.values.map((val, idx) => (
+            {about.values.map((val, idx) => (
               <div
                 key={idx}
                 className="bg-white/[0.03] backdrop-blur-md border border-white/10 p-8 rounded-3xl hover:bg-white/[0.07] hover:border-brand-teal/40 transition-all duration-500 group hover:-translate-y-1 text-left flex flex-col justify-between"
